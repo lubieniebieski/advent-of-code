@@ -2,3 +2,8 @@ Documentation:
   Enabled: false
 Style/FileName:
   Enabled: false
+Metrics/LineLength:
+  Max: 100
+Metrics/AbcSize:
+  Enabled: false
+

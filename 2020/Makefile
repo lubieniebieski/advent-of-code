@@ -10,6 +10,7 @@ run:
 	docker-compose -f docker-compose.yml run --rm $(c)
 
 advent:
+	docker-compose -f docker-compose.yml run --rm --name=test script bundle exec rubocop . --auto-correct
 	$(foreach file, $(FILES), docker-compose -f docker-compose.yml run --rm --name=${file} script ruby ${file};)
 
 start:

@@ -12,13 +12,13 @@ class Calculation
 end
 
 class Passport
-  KEY_NAMES = %w(byr iyr eyr hgt hcl ecl pid cid)
-  OPTIONAL_KEYS = %w(cid)
+  KEY_NAMES = %w(byr iyr eyr hgt hcl ecl pid cid).freeze
+  OPTIONAL_KEYS = %w(cid).freeze
 
   attr_reader :data
 
   def initialize(data)
-    raw_data = data.gsub("\n", " ").split(" ")
+    raw_data = data.tr("\n", ' ').split(' ')
     @data = {}
     raw_data.each do |rd|
       key, value = rd.split(':')
@@ -46,25 +46,25 @@ class Passport
   private
 
   def correct_years?
-    (1920..2002).include?(@data["byr"].to_i) &&
-    (2010..2020).include?(@data["iyr"].to_i) &&
-    (2020..2030).include?(@data["eyr"].to_i)
+    (1920..2002).cover?(@data['byr'].to_i) &&
+      (2010..2020).cover?(@data['iyr'].to_i) &&
+      (2020..2030).cover?(@data['eyr'].to_i)
   end
 
   def valid_height?
-    @data["hgt"].match?(/1([5-8]\d|9[0-3])cm|(59|6\d|7[0-6])in/)
+    @data['hgt'].match?(/1([5-8]\d|9[0-3])cm|(59|6\d|7[0-6])in/)
   end
 
   def valid_hair?
-    @data["hcl"].match(/#[0-9a-f]{6}/)
+    @data['hcl'].match(/#[0-9a-f]{6}/)
   end
 
   def valid_eye_color?
-    @data["ecl"].match(/(amb|blu|brn|gry|grn|hzl|oth)/)
+    @data['ecl'].match(/(amb|blu|brn|gry|grn|hzl|oth)/)
   end
 
   def valid_pid?
-    @data["pid"].match?(/\d{9}/)
+    @data['pid'].match?(/\d{9}/)
   end
 
   def correct_fields_present?

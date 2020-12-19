@@ -12,13 +12,13 @@ class Calculation
 end
 
 class Passport
-  KEY_NAMES = %w(byr iyr eyr hgt hcl ecl pid cid)
-  OPTIONAL_KEYS = %w(cid)
+  KEY_NAMES = %w(byr iyr eyr hgt hcl ecl pid cid).freeze
+  OPTIONAL_KEYS = %w(cid).freeze
 
   attr_reader :data
 
   def initialize(data)
-    raw_data = data.gsub("\n", " ").split(" ")
+    raw_data = data.tr("\n", ' ').split(' ')
     @data = {}
     raw_data.each do |rd|
       key, value = rd.split(':')

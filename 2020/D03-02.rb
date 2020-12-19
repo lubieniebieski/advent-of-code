@@ -9,30 +9,30 @@ class Calculation
 
   def run
     @slopes.map do |slope|
-      x = 1
-      y = 1
-      trees = 0
-      while y <= @lines.count
-        if is_tree?(@lines[y - 1].strip, x)
-          trees +=1
-        end
-        x += slope[0]
-        y += slope[1]
-      end
-      trees
+      scan_slope(slope)
     end.inject(:*)
-
   end
 
   private
 
+  def scan_slope(slope)
+    x = 1
+    y = 1
+    trees = 0
+    while y <= @lines.count
+      trees += 1 if tree?(@lines[y - 1].strip, x)
+      x += slope[0]
+      y += slope[1]
+    end
+    trees
+  end
 
-  def is_tree?(line, position)
+  def tree?(line, position)
     chars = line.chars
-    if (chars.count) <= position
-      is_tree?((chars * 2).join, position)
+    if chars.count <= position
+      tree?((chars * 2).join, position)
     else
-      chars[position - 1] == "#"
+      chars[position - 1] == '#'
     end
   end
 end

@@ -8,7 +8,7 @@ class Calculation
   def run
     @passwords.find_all do |p|
       capture = p.match(/(?<min>\d+)-(?<max>\d+)\s(?<letter>\D):\s(?<string>\S+)/)
-      count = capture['string'].chars.count { |c| c == capture["letter"]}
+      count = capture['string'].chars.count { |c| c == capture['letter'] }
       (capture['min'].to_i..capture['max'].to_i).cover?(count)
     end.size
   end

@@ -6,7 +6,7 @@ class Calculation
   end
 
   def run
-    @groups.sum { |g| g.common_yeses }
+    @groups.sum(&:common_yeses)
   end
 end
 

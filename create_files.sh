@@ -9,8 +9,9 @@ for y in `seq -w 2021 2021`; do
 
   for i in `seq -w $DAY`; do
     touch $DIR/$y/solutions/D$(printf %02d $i)-Readme.md
-    touch $DIR/$y/solutions/D$(printf %02d $i).rb
-    touch $DIR/$y/spec/D$(printf %02d $i)\_spec.rb
     touch $DIR/$y/inputs/D$(printf %02d $i).txt
+    touch $DIR/$y/spec
+    cp -n templates/solution.rb $DIR/$y/solutions/D$(printf %02d $i).rb
+    cp -n templates/spec.rb $DIR/$y/spec/D$(printf %02d $i)_spec.rb
   done
 done

@@ -1,0 +1,10 @@
+version: '3'
+services:
+  script:
+    build: .
+    container_name: advent_of_code_launcher
+    image: advent_of_code_launcher:latest
+    volumes:
+      - .:/app
+    stdin_open: true # Keep STDIN open even if not attached
+    tty: true # Allocate a pseudo-tty

@@ -8,7 +8,7 @@ for y in `seq -w 2021 2021`; do
   mkdir -p $DIR/$y/inputs
 
   for i in `seq -w $DAY`; do
-    touch $DIR/$y/solutions/D$(printf %02d $i)-Readme.md
+    touch $DIR/$y/solutions/D$(printf %02d $i)-Readme.txt
     touch $DIR/$y/inputs/D$(printf %02d $i).txt
     touch $DIR/$y/spec
     cp -n templates/solution.rb $DIR/$y/solutions/D$(printf %02d $i).rb

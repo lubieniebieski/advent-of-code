@@ -41,7 +41,7 @@ forward 2'
     end
 
     context 'Part 2' do
-      it 'Passes the example', focus: true do
+      it 'Passes the example' do
         expect(subject.part2).to eq 900
       end
     end

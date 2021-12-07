@@ -7,11 +7,19 @@ for y in `seq -w 2021 2021`; do
   mkdir -p $DIR/$y/spec
   mkdir -p $DIR/$y/inputs
 
-  for i in `seq -w $DAY`; do
-    touch $DIR/$y/solutions/D$(printf %02d $i)-Readme.txt
-    touch $DIR/$y/inputs/D$(printf %02d $i).txt
+  for i in `seq $DAY`; do
+    if [ $i -lt 10 ]; then 
+      i="0$i"
+    fi
+    PREFIX=D$i
+    touch $DIR/$y/solutions/$PREFIX-Readme.txt
+    touch $DIR/$y/inputs/$PREFIX.txt
     touch $DIR/$y/spec
-    cp -n templates/solution.rb $DIR/$y/solutions/D$(printf %02d $i).rb
-    cp -n templates/spec.rb $DIR/$y/spec/D$(printf %02d $i)_spec.rb
+    SPEC_FILE=$DIR/$y/spec/${PREFIX}_spec.rb
+    SOLUTION_FILE=$DIR/$y/solutions/$PREFIX.rb
+    cp -n templates/solution.rb $SOLUTION_FILE
+    cp -n templates/spec.rb $SPEC_FILE
+    sed -i '' -e "s/D00/$PREFIX/g" $SOLUTION_FILE
+    sed -i '' -e "s/D00/$PREFIX/g" $SPEC_FILE
   done
 done

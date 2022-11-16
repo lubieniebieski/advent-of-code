@@ -2,9 +2,8 @@ package main
 
 import (
 	"fmt"
-	"os"
-	"strconv"
-	"strings"
+
+	"github.com/lubieniebieski/advent-of-code/2022/tools"
 )
 
 func PartOne(nums []int) (int, error) {
@@ -18,7 +17,7 @@ func PartOne(nums []int) (int, error) {
 }
 
 func main() {
-	nums := ParseIntegersFromFile("input.txt")
+	nums := tools.ParseIntegersFromFile("input.txt")
 	answer, err := PartOne(nums)
 
 	if err != nil {
@@ -26,24 +25,4 @@ func main() {
 	}
 
 	fmt.Printf("Part One: %d \n", answer)
-}
-
-func ParseIntegersFromFile(fileName string) (result []int) {
-	input, err := os.ReadFile(fileName)
-	if err != nil {
-		panic(err)
-	}
-	return ParseIntegersFromString(string(input))
-}
-
-func ParseIntegersFromString(input string) (ans []int) {
-	for _, l := range strings.Split(input, "\n") {
-
-		number, _ := strconv.ParseInt(strings.TrimSpace(l), 0, 32)
-		if number == 0 {
-			continue
-		}
-		ans = append(ans, int(number))
-	}
-	return ans
 }

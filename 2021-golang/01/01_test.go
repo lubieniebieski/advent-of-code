@@ -22,6 +22,6 @@ func TestPartOne(t *testing.T) {
 	got, _ := PartOne(tools.ParseIntegersFromString(input))
 
 	if got != want {
-		t.Errorf("Wanted %d, got %d", want, got)
+		t.Errorf("According to the example, we should have %d, but we've got %d", want, got)
 	}
 }

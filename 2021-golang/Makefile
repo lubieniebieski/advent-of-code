@@ -2,9 +2,10 @@
 FILES = $(shell ls -d [0-9][0-9])
 
 run:
+ifeq (, $(shell which go))
+	docker build -q -t gorun . && docker run --rm -it gorun make
+else
 	$(foreach file, $(FILES), \
 		echo DAY\#${file}; \
-		cd ${file}; go run .; cd ..;)
-
-run-with-docker:
-	docker build -q -t gorun . && docker run --rm -it gorun make
+		cd ${file}; go test .; go run .; cd ..;)
+endif

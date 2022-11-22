@@ -19,7 +19,7 @@ func TestPartOne(t *testing.T) {
   263
   `
 	want := 7
-	got, _ := PartOne(tools.ParseIntegersFromString(input))
+	got, _ := PartOne(tools.ExtractIntegersFromString(input))
 	compareWithExample(t, want, got)
 }
 
@@ -36,7 +36,7 @@ func TestPartTwo(t *testing.T) {
   263
   `
 	want := 5
-	got, _ := PartTwo(tools.ParseIntegersFromString(input))
+	got, _ := PartTwo(tools.ExtractIntegersFromString(input))
 	compareWithExample(t, want, got)
 }
 

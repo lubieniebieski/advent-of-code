@@ -22,7 +22,16 @@ func (c Command) Horizontal() int {
 		return -int(c.value)
 	}
 	return 0
+}
 
+func (c Command) Aim() int {
+	switch c.direction {
+	case "down":
+		return int(c.value)
+	case "up":
+		return -int(c.value)
+	}
+	return 0
 }
 
 func (c Command) Vertical() int {
@@ -33,7 +42,6 @@ func (c Command) Vertical() int {
 		return int(c.value)
 	}
 	return 0
-
 }
 func PartOne(commands []Command) (int, error) {
 	horizontalPosition := 0
@@ -41,6 +49,20 @@ func PartOne(commands []Command) (int, error) {
 	for _, c := range commands {
 		horizontalPosition += c.Horizontal()
 		depth += c.Vertical()
+	}
+	return horizontalPosition * depth, nil
+}
+
+func PartTwo(commands []Command) (int, error) {
+	horizontalPosition := 0
+	depth := 0
+	aim := 0
+	for _, c := range commands {
+		if c.direction == "forward" {
+			depth += aim * c.value
+		}
+		horizontalPosition += c.Horizontal()
+		aim += c.Aim()
 	}
 	return horizontalPosition * depth, nil
 }
@@ -69,6 +91,14 @@ func main() {
 	strings := tools.ExtractStringsFromString(string(input))
 	commands := ConvertStringsToCommand(strings)
 	answer, err := PartOne(commands)
+
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Printf("Part One: %d \n", answer)
+
+	answer, err = PartTwo(commands)
 
 	if err != nil {
 		panic(err)

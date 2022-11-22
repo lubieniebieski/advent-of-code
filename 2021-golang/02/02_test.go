@@ -21,6 +21,21 @@ func TestPartOne(t *testing.T) {
 	compareWithExample(t, want, got)
 }
 
+func TestPartTwo(t *testing.T) {
+	input := `forward 5
+	down 5
+	forward 8
+	up 3
+	down 8
+	forward 2
+`
+	want := 900
+	strings := tools.ExtractStringsFromString(input)
+	commands := ConvertStringsToCommand(strings)
+	got, _ := PartTwo(commands)
+	compareWithExample(t, want, got)
+}
+
 func TestConvertToCommand(t *testing.T) {
 	var convertTests = []struct {
 		input    string
@@ -74,7 +89,6 @@ func TestHorizontalValue(t *testing.T) {
 			t.Errorf("Value should be %v, but got %v instead", want, got)
 		}
 	})
-
 }
 
 func TestVerticalValue(t *testing.T) {
@@ -111,6 +125,27 @@ func TestVerticalValue(t *testing.T) {
 			t.Errorf("Value should be %v, but got %v instead", want, got)
 		}
 	})
+}
+
+func TestAim(t *testing.T) {
+	t.Run("decreses when up is provided", func(t *testing.T) {
+		command := Command{"up", 4}
+		want := -4
+		got := command.Aim()
+		if got != want {
+			t.Errorf("Value should be %v, but got %v instead", want, got)
+		}
+	})
+
+	t.Run("increases when down is provided", func(t *testing.T) {
+		command := Command{"down", 4}
+		want := 4
+		got := command.Aim()
+		if got != want {
+			t.Errorf("Value should be %v, but got %v instead", want, got)
+		}
+	})
+
 }
 
 func compareWithExample(t *testing.T, want, got int) {

@@ -25,3 +25,11 @@ func ExtractIntegersFromString(input string) (ans []int) {
 	}
 	return ans
 }
+
+func ExtractStringsFromString(input string) (result []string) {
+
+	for _, l := range strings.Split(input, "\n") {
+		result = append(result, strings.TrimSpace(l))
+	}
+	return result
+}

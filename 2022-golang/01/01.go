@@ -10,70 +10,60 @@ import (
 	"github.com/lubieniebieski/advent-of-code/2022-golang/tools"
 )
 
-func PartOne(caloriesList []string) (int, error) {
-	topElfCaloriesSum := 0
-	currentElfCalories := 0
-	for i := 0; i < len(caloriesList); i++ {
-		if caloriesList[i] == "" {
-			if currentElfCalories > topElfCaloriesSum {
-			topElfCaloriesSum = currentElfCalories
+func PartOne(stringsArray []string) int {
+	var biggestSum int
+	var currentSum int
+	for _, v := range stringsArray {
+		if v == "" {
+			if currentSum > biggestSum {
+				biggestSum = currentSum
 			}
-			currentElfCalories = 0
-		continue
+			currentSum = 0
+			continue
 		} else {
-			calories := 0
-			calories, _ = strconv.Atoi(strings.TrimSpace(caloriesList[i]))
-			currentElfCalories += calories
+			var intValue int
+			intValue, _ = strconv.Atoi(v)
+			currentSum += intValue
 		}
-
 	}
-	return topElfCaloriesSum, nil
+
+	return biggestSum
 }
 
-func PartTwo(caloriesList []string) (int, error) {
-	var topElves []int
-	currentElfCalories := 0
-	for i := 0; i < len(caloriesList); i++ {
-		if caloriesList[i] == "" {
-			topElves = append(topElves,currentElfCalories)
-
-			currentElfCalories = 0
-		continue
+func PartTwo(caloriesList []string) int {
+	var sumList []int
+	var currentSum int
+	for _, v := range caloriesList {
+		if v == "" {
+			sumList = append(sumList, currentSum)
+			currentSum = 0
+			continue
 		} else {
-			calories := 0
-			calories, _ = strconv.Atoi(strings.TrimSpace(caloriesList[i]))
-			currentElfCalories += calories
+			var intValue int
+			intValue, _ = strconv.Atoi(strings.TrimSpace(v))
+			currentSum += intValue
 		}
-
 	}
 
-	sort.Sort(sort.Reverse(sort.IntSlice(topElves)))
-	topElfCaloriesSum := 0
-	for i := 0; i <= 2; i++ {
-		topElfCaloriesSum += topElves[i]
+	sort.Sort(sort.Reverse(sort.IntSlice(sumList)))
+	var biggestSums int
+	for _, v := range sumList[0:3] {
+		biggestSums += v
 	}
-	return topElfCaloriesSum, nil
+	return biggestSums
+}
+
+func parsedData() []string {
+	rawData, err := os.ReadFile("input.txt")
+	if err != nil {
+		panic(err)
+	}
+	return tools.ExtractStringsFromString(string(rawData))
 }
 
 func main() {
-	input, err := os.ReadFile("input.txt")
-	if err != nil {
-		panic(err)
-	}
-	nums := tools.ExtractStringsFromString(string(input))
-	answer, err := PartOne(nums)
+	data := parsedData()
 
-	if err != nil {
-		panic(err)
-	}
-
-	fmt.Printf("Part One: %d \n", answer)
-
-	answer, err = PartTwo(nums)
-
-	if err != nil {
-		panic(err)
-	}
-
-	fmt.Printf("Part Two: %d \n", answer)
+	fmt.Printf("Part One: %d \n", PartOne(data))
+	fmt.Printf("Part Two: %d \n", PartTwo(data))
 }

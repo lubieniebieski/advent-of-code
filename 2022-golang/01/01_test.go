@@ -19,11 +19,11 @@ func TestPartTwo(t *testing.T) {
 }
 
 func testData() []string {
-  return tools.ExtractStringsFromString(testInput())
+	return tools.ExtractStringsFromString(testInput())
 }
 
 func testInput() string {
-  return `1000
+	return `1000
   2000
   3000
 

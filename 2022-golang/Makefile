@@ -7,5 +7,5 @@ ifeq (, $(shell which go))
 else
 	$(foreach file, $(FILES), \
 		echo DAY\#${file}; \
-		cd ${file}; go test .; go run .; cd ..;)
+		cd ${file}; go test .; go fmt; go run .; cd ..;)
 endif

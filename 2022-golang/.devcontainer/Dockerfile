@@ -17,6 +17,7 @@ RUN apt-get update \
 
 RUN go install -v golang.org/x/tools/gopls@latest
 RUN go install -v github.com/ramya-rao-a/go-outline@latest
+RUN go install -v github.com/go-delve/delve/cmd/dlv@latest
 # Revert workaround at top layer.
 ENV DEBIAN_FRONTEND=dialog
 

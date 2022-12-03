@@ -40,6 +40,16 @@ func PartOne(stringsArray []string) int {
 	return prioritiesSum
 }
 
+func PartTwo(stringsArray []string) int {
+	var prioritiesSum int
+
+	for i := 0; i < len(stringsArray); i += 3 {
+		commonElements := Intersection(string(Intersection(stringsArray[i], stringsArray[i+1])), stringsArray[i+2])
+		prioritiesSum += Priority(commonElements[0])
+	}
+	return prioritiesSum
+}
+
 func parsedData() []string {
 	rawData, err := os.ReadFile("input.txt")
 	if err != nil {

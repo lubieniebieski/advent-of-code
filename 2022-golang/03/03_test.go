@@ -21,7 +21,7 @@ func TestPriority(t *testing.T) {
 		{'s', 19},
 	}
 	for _, test := range cases {
-		t.Run(fmt.Sprintf("Works correctly for %v character", test.input), func(t *testing.T) {
+		t.Run(fmt.Sprintf("Works correctly for '%v' character", test.input), func(t *testing.T) {
 			compareWithExample(t, test.want, Priority(test.input))
 		})
 	}
@@ -54,6 +54,12 @@ func TestIntersection(t *testing.T) {
 func TestPartOne(t *testing.T) {
 	want := 157
 	got := PartOne(testData())
+	compareWithExample(t, want, got)
+}
+
+func TestPartTwo(t *testing.T) {
+	want := 70
+	got := PartTwo(testData())
 	compareWithExample(t, want, got)
 }
 

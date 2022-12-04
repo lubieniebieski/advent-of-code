@@ -4,18 +4,19 @@ import (
 	"testing"
 
 	"github.com/lubieniebieski/advent-of-code/2022-golang/tools"
+	"github.com/lubieniebieski/advent-of-code/2022-golang/tools/toolstest"
 )
 
 func TestPartOne(t *testing.T) {
 	want := 24000
 	got := PartOne(testData())
-	compareWithExample(t, want, got)
+	toolstest.CompareWithExample(t, want, got)
 }
 
 func TestPartTwo(t *testing.T) {
 	want := 45000
 	got := PartTwo(testData())
-	compareWithExample(t, want, got)
+	toolstest.CompareWithExample(t, want, got)
 }
 
 func testData() []string {
@@ -38,11 +39,4 @@ func testInput() string {
 
   10000
   `
-}
-func compareWithExample(t *testing.T, want, got int) {
-	t.Helper()
-
-	if got != want {
-		t.Errorf("According to the example, we should have %d, but we've got %d", want, got)
-	}
 }

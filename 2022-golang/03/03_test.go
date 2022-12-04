@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/lubieniebieski/advent-of-code/2022-golang/tools"
+	"github.com/lubieniebieski/advent-of-code/2022-golang/tools/toolstest"
 )
 
 func TestPriority(t *testing.T) {
@@ -22,7 +23,7 @@ func TestPriority(t *testing.T) {
 	}
 	for _, test := range cases {
 		t.Run(fmt.Sprintf("Works correctly for '%v' character", test.input), func(t *testing.T) {
-			compareWithExample(t, test.want, Priority(test.input))
+			toolstest.CompareWithExample(t, test.want, Priority(test.input))
 		})
 	}
 }
@@ -54,13 +55,13 @@ func TestIntersection(t *testing.T) {
 func TestPartOne(t *testing.T) {
 	want := 157
 	got := PartOne(testData())
-	compareWithExample(t, want, got)
+	toolstest.CompareWithExample(t, want, got)
 }
 
 func TestPartTwo(t *testing.T) {
 	want := 70
 	got := PartTwo(testData())
-	compareWithExample(t, want, got)
+	toolstest.CompareWithExample(t, want, got)
 }
 
 func testData() []string {
@@ -74,11 +75,4 @@ func testInput() string {
 	wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn
 	ttgJtRGJQctTZtZT
 	CrZsJsPPZsGzwwsLwLmpwMDw`
-}
-func compareWithExample(t *testing.T, want, got int) {
-	t.Helper()
-
-	if got != want {
-		t.Errorf("According to the example, we should have %d, but we've got %d", want, got)
-	}
 }

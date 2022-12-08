@@ -13,6 +13,12 @@ func TestPartOne(t *testing.T) {
 	toolstest.CompareWithExample(t, want, got)
 }
 
+func TestPartTwo(t *testing.T) {
+	want := 24933642
+	got := PartTwo(testData())
+	toolstest.CompareWithExample(t, want, got)
+}
+
 func testData() []string {
 	return tools.ExtractStringsFromString(testInput())
 }

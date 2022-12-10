@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"reflect"
 	"testing"
 
@@ -30,19 +31,39 @@ func TestNthCharToInt(t *testing.T) {
 				t.Errorf("Expected %v to be %v", n, result)
 			}
 		})
-
 	}
+}
 
+func TestCalculateTreeScore(t *testing.T) {
+	matrix := [][]int{
+		{3, 0, 3, 7, 3},
+		{2, 5, 5, 1, 2},
+		{6, 5, 3, 3, 2},
+		{3, 3, 5, 4, 9},
+		{3, 5, 3, 9, 0},
+	}
+	tests := []struct {
+		i, j, want int
+	}{
+		{0, 0, 0},
+		{4, 0, 0},
+		{1, 2, 4},
+		{3, 2, 8},
+	}
+	for _, test := range tests {
+		name := fmt.Sprintf("i=%v,j=%v", test.i, test.j)
+		t.Run(name, func(t *testing.T) {
+			got := CalculateTreeScore(test.i, test.j, matrix)
+			if got != test.want {
+				t.Errorf("Expected %v, got %v", test.want, got)
+			}
+		})
+	}
 }
 
 func TestRotateSquareArray(t *testing.T) {
-	// Declare a square 2D array of integers
 	arr := [][]int{{1, 1, 1, 1}, {2, 2, 2, 2}, {3, 3, 3, 3}, {4, 4, 4, 4}}
-
-	// Rotate the array
 	rotated := RotateIntMatrix(arr)
-
-	// Check if the rotated array is as expected
 	expected := [][]int{{4, 3, 2, 1}, {4, 3, 2, 1}, {4, 3, 2, 1}, {4, 3, 2, 1}}
 	for i := 0; i < 3; i++ {
 		for j := 0; j < 3; j++ {
@@ -52,9 +73,16 @@ func TestRotateSquareArray(t *testing.T) {
 		}
 	}
 }
+
 func TestPartOne(t *testing.T) {
 	want := 21
 	got := PartOne(testData())
+	toolstest.CompareWithExample(t, want, got)
+}
+
+func TestPartTwo(t *testing.T) {
+	want := 8
+	got := PartTwo(testData())
 	toolstest.CompareWithExample(t, want, got)
 }
 

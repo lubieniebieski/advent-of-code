@@ -71,10 +71,55 @@ func RotateBoolMatrix(arr [][]bool) [][]bool {
 	return rotated
 }
 
-func PartOne(data []string) (result int) {
-	max := len(data)
-	maxes := CreateBoolMatrix(max)
-	matrix := ToIntMatrix(data)
+func CalculateTreeScore(y, x int, matrix [][]int) int {
+	max := len(matrix)
+	right := 0
+	value := matrix[y][x]
+	for j := x + 1; j < max; j++ {
+		right += 1
+		if matrix[y][j] >= value {
+			break
+		}
+	}
+	if right == 0 {
+		return 0
+	}
+
+	left := 0
+	for j := x - 1; j >= 0; j-- {
+		left += 1
+		if matrix[y][j] >= value {
+			break
+		}
+	}
+	if left == 0 {
+		return 0
+	}
+	down := 0
+	for i := y + 1; i < max; i++ {
+		down += 1
+		if matrix[i][x] >= value {
+			break
+		}
+	}
+	if down == 0 {
+		return 0
+	}
+	up := 0
+	for i := y - 1; i >= 0; i-- {
+		up += 1
+		if matrix[i][x] >= value {
+			break
+		}
+
+	}
+	return right * left * up * down
+}
+
+func PrepareDataForResult(data *[]string) (matrix [][]int, maxes [][]bool) {
+	max := len(*data)
+	maxes = CreateBoolMatrix(max)
+	matrix = ToIntMatrix(*data)
 	var rotations = 1
 	for rotations <= 4 {
 		for i := 0; i < max; i++ {
@@ -95,14 +140,36 @@ func PartOne(data []string) (result int) {
 		maxes = RotateBoolMatrix(maxes)
 		rotations += 1
 	}
-	for i := 0; i < max; i++ {
-		for j := 0; j < max; j++ {
+	return matrix, maxes
+}
+
+func PartOne(data []string) (result int) {
+	_, maxes := PrepareDataForResult(&data)
+
+	for i := 0; i < len(data); i++ {
+		for j := 0; j < len(data); j++ {
 			if maxes[i][j] {
 				result += 1
 			}
 		}
 	}
 	return result
+}
+
+func PartTwo(data []string) (result int) {
+
+	matrix, maxes := PrepareDataForResult(&data)
+
+	scores := []int{}
+	for i := 0; i < len(data); i++ {
+		for j := 0; j < len(data); j++ {
+			if maxes[i][j] {
+				scores = append(scores, CalculateTreeScore(i, j, matrix))
+			}
+		}
+	}
+	_, max := tools.FindMinAndMax(scores)
+	return max
 }
 
 func parsedData() []string {

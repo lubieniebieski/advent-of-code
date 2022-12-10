@@ -32,14 +32,6 @@ func CreateIntMatrix(size int) [][]int {
 	return matrix
 }
 
-func CreateBoolMatrix(size int) [][]bool {
-	matrix := make([][]bool, size)
-	for i := 0; i < size; i++ {
-		matrix[i] = make([]bool, size)
-	}
-	return matrix
-}
-
 func RotateIntMatrix(arr [][]int) [][]int {
 	n := len(arr)
 	rotated := make([][]int, n)
@@ -118,7 +110,7 @@ func CalculateTreeScore(y, x int, matrix [][]int) int {
 
 func PrepareDataForResult(data *[]string) (matrix [][]int, maxes [][]bool) {
 	max := len(*data)
-	maxes = CreateBoolMatrix(max)
+	maxes = tools.CreateBoolMatrix(max)
 	matrix = ToIntMatrix(*data)
 	var rotations = 1
 	for rotations <= 4 {

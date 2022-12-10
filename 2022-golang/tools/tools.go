@@ -47,3 +47,11 @@ func FindMinAndMax(a []int) (min int, max int) {
 	}
 	return min, max
 }
+
+func CreateBoolMatrix(size int) [][]bool {
+	matrix := make([][]bool, size)
+	for i := 0; i < size; i++ {
+		matrix[i] = make([]bool, size)
+	}
+	return matrix
+}

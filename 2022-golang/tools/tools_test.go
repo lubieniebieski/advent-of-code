@@ -18,6 +18,22 @@ func TestFindMinAndMax(t *testing.T) {
 	}
 }
 
+func TestCreateBoolMatrix(t *testing.T) {
+	want := [][]bool{{false, false}, {false, false}}
+	got := CreateBoolMatrix(2)
+
+	if len(got) != len(want) {
+		t.Errorf("Matrix length is incorrect")
+	}
+	for i := 0; i < len(want); i++ {
+		for j := 0; j < len(want); j++ {
+			if want[i][j] != got[i][j] {
+				t.Errorf("Expected %v, got %v", want, got)
+			}
+		}
+	}
+}
+
 func TestExtractIntegersFromString(t *testing.T) {
 	input := `1
   2

@@ -262,6 +262,21 @@ func TestPartOne(t *testing.T) {
 	toolstest.CompareWithExample(t, want, got)
 }
 
+func TestPartTwo(t *testing.T) {
+	input := `R 5
+U 8
+L 8
+D 3
+R 17
+D 10
+L 25
+U 20`
+	data := tools.ExtractStringsFromString(input)
+	want := 36
+	got := PartTwo(data)
+	toolstest.CompareWithExample(t, want, got)
+}
+
 func assertPosition(t testing.TB, got Point, want Point) {
 	t.Helper()
 	if got.x != want.x || got.y != want.y {

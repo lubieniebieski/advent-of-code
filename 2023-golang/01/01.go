@@ -5,6 +5,7 @@ import (
 	"os"
 	"regexp"
 	"strconv"
+	"strings"
 
 	"github.com/lubieniebieski/advent-of-code/2023-golang/tools"
 )
@@ -48,7 +49,31 @@ func PartOne(stringsArray []string) int {
 }
 
 func PartTwo(stringsArray []string) int {
-	return 0
+	var result int
+	for _, str := range stringsArray {
+		str = ReplaceTextToNumber(str)
+		calibration := CalibrationValue{input: str}
+		result += calibration.GetValue()
+	}
+	return result
+}
+
+func ReplaceTextToNumber(str string) string {
+	substitutions := map[string]string{
+		"one":   "o1e",
+		"two":   "t2o",
+		"three": "t3e",
+		"four":  "f4r",
+		"five":  "f5e",
+		"six":   "s6x",
+		"seven": "s7n",
+		"eight": "e8t",
+		"nine":  "n9e",
+	}
+	for k, v := range substitutions {
+		str = strings.ReplaceAll(str, k, v)
+	}
+	return str
 }
 
 func parsedData() []string {

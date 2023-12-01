@@ -10,50 +10,44 @@ import (
 	"github.com/lubieniebieski/advent-of-code/2023-golang/tools"
 )
 
-type CalibrationValue struct {
+type CalibrationData struct {
 	input string
 }
 
-func (c *CalibrationValue) FindNumbers() (result []int) {
+func (c *CalibrationData) GetNumber() (result int) {
+	var stringNumber string
 	firstNumberRe := regexp.MustCompile(`(\d).*`)
 	firstNumberMatch := firstNumberRe.FindAllStringSubmatch(c.input, -1)
 	if len(firstNumberMatch) == 0 {
-		return []int{}
+		return 0
 	}
-	firstNumberInt, _ := strconv.Atoi(firstNumberMatch[0][1])
-	result = append(result, firstNumberInt)
+	stringNumber = firstNumberMatch[0][1]
 
 	lastNumberRe := regexp.MustCompile(`.*(\d)`)
 	lastNumber := lastNumberRe.FindAllStringSubmatch(c.input, -1)[0][1]
-	lastNumberInt, _ := strconv.Atoi(lastNumber)
-	result = append(result, lastNumberInt)
+	stringNumber += lastNumber
+	result, _ = strconv.Atoi(stringNumber)
+
 	return result
 }
 
-func (c *CalibrationValue) GetValue() int {
-	if len(c.FindNumbers()) < 2 {
-		return 0
-	}
-	s := strconv.Itoa(c.FindNumbers()[0]) + strconv.Itoa(c.FindNumbers()[1])
-	number, _ := strconv.Atoi(s)
-	return number
-}
+func PartOne(input string) (result int) {
+	stringsArray := tools.ExtractStringsFromString(input)
 
-func PartOne(stringsArray []string) int {
-	var result int
 	for _, str := range stringsArray {
-		calibration := CalibrationValue{input: str}
-		result += calibration.GetValue()
+		calibration := CalibrationData{input: str}
+		result += calibration.GetNumber()
 	}
 	return result
 }
 
-func PartTwo(stringsArray []string) int {
-	var result int
+func PartTwo(input string) (result int) {
+	stringsArray := tools.ExtractStringsFromString(input)
+
 	for _, str := range stringsArray {
 		str = ReplaceTextToNumber(str)
-		calibration := CalibrationValue{input: str}
-		result += calibration.GetValue()
+		calibration := CalibrationData{input: str}
+		result += calibration.GetNumber()
 	}
 	return result
 }
@@ -76,12 +70,12 @@ func ReplaceTextToNumber(str string) string {
 	return str
 }
 
-func parsedData() []string {
+func parsedData() string {
 	rawData, err := os.ReadFile("input.txt")
 	if err != nil {
 		panic(err)
 	}
-	return tools.ExtractStringsFromString(string(rawData))
+	return string(rawData)
 }
 
 func main() {

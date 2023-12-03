@@ -41,7 +41,7 @@ var testCases = []struct {
 		......755.
 		...$.*....
 		.664.598..`,
-		4361,
+		467835,
 	},
 }
 
@@ -52,7 +52,6 @@ func TestPartOne(t *testing.T) {
 }
 
 func TestPartTwo(t *testing.T) {
-	t.SkipNow()
 	want := testCases[2].want
 	got := PartTwo(testCases[2].input)
 	toolstest.CompareWithExample(t, want, got)

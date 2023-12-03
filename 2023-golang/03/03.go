@@ -11,8 +11,9 @@ import (
 )
 
 type Part struct {
-	PartNumber int
-	x, y       int
+	PartNumber     int
+	x, y           int
+	AdjecentSymbol Point
 }
 
 type Point struct {
@@ -55,10 +56,28 @@ func (p *Part) AdjecentToSymbol(data []string, symbols []string) bool {
 			continue
 		}
 		if IsSymbol(string(data[y][x]), symbols) {
+			p.AdjecentSymbol = Point{x, y}
 			return true
 		}
 	}
 	return false
+}
+
+func (p *Part) PointsAdjecent(data []string, symbols []string) []Point {
+	points := make([]Point, 0)
+	for _, point := range p.AdjecentToCoordinates() {
+		x, y := point.x, point.y
+		if x < 0 || y < 0 {
+			continue
+		}
+		if x >= len(data[0]) || y >= len(data) {
+			continue
+		}
+		if IsSymbol(string(data[y][x]), symbols) {
+			points = append(points, point)
+		}
+	}
+	return points
 }
 
 func IsSymbol(str string, symbols []string) bool {
@@ -116,6 +135,20 @@ func PartOne(input string) (result int) {
 }
 
 func PartTwo(input string) (result int) {
+	stringsArray := tools.ExtractStringsFromString(input)
+	asterisks := make(map[Point]Part)
+	for y, str := range stringsArray {
+		parts := FindParts(str, y)
+		for _, part := range parts {
+			if part.AdjecentToSymbol(stringsArray, []string{"*"}) {
+				if asterisks[part.AdjecentSymbol] != (Part{}) {
+					result += part.PartNumber * asterisks[part.AdjecentSymbol].PartNumber
+				} else {
+					asterisks[part.AdjecentSymbol] = part
+				}
+			}
+		}
+	}
 	return result
 }
 

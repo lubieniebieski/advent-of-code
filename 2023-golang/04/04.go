@@ -12,13 +12,14 @@ import (
 )
 
 type Card struct {
+	ID             int
 	Numbers        []int
 	WinningNumbers []int
 }
 
 func AddCard(input string) (card Card) {
-	cardIdRe := regexp.MustCompile(`Card\s+\d+:`)
-
+	cardIdRe := regexp.MustCompile(`Card\s+(\d+):`)
+	card.ID, _ = strconv.Atoi(cardIdRe.FindStringSubmatch(input)[1])
 	input = cardIdRe.ReplaceAllString(input, "")
 	numbersStr := strings.Split(input, "|")[0]
 	winningNumbersStr := strings.Split(input, "|")[1]
@@ -32,10 +33,7 @@ func AddCard(input string) (card Card) {
 		numberInt, _ := strconv.Atoi(number)
 		card.WinningNumbers = append(card.WinningNumbers, numberInt)
 	}
-	return Card{
-		Numbers:        card.Numbers,
-		WinningNumbers: card.WinningNumbers,
-	}
+	return card
 }
 
 func (c Card) Points() int {
@@ -52,6 +50,27 @@ func (c Card) Points() int {
 	return points
 }
 
+func (c Card) MatchingNumbersCount() int {
+	points := 0
+	for _, number := range c.WinningNumbers {
+		if slices.Contains(c.Numbers, number) {
+			points++
+		}
+	}
+	return points
+}
+
+func findCopies(strArray []string, maxDepth int) int {
+	result := 0
+
+	for i := 0; i < maxDepth; i++ {
+		card := AddCard(strArray[i])
+		result += 1
+		result += findCopies(strArray[i+1:], card.MatchingNumbersCount())
+	}
+	return result
+}
+
 func PartOne(input string) (result int) {
 	stringsArray := tools.ExtractStringsFromString(input)
 	for _, data := range stringsArray {
@@ -62,8 +81,9 @@ func PartOne(input string) (result int) {
 }
 
 func PartTwo(input string) (result int) {
+	stringsArray := tools.ExtractStringsFromString(input)
 
-	return result
+	return findCopies(stringsArray, len(stringsArray))
 }
 
 func parsedData() string {

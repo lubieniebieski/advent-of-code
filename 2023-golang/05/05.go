@@ -7,6 +7,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/lubieniebieski/advent-of-code/2023-golang/tools"
 )
@@ -108,7 +109,6 @@ func PartOne(input string) (result int) {
 func PartTwo(input string) (result int) {
 	seeds := SeedsFromString(input)
 	if len(seeds) == 0 {
-
 		return result
 	}
 	min := 1000000000000000000
@@ -139,7 +139,11 @@ func parsedData() string {
 
 func main() {
 	data := parsedData()
-
+	start := time.Now()
 	fmt.Printf("Part One: %d \n", PartOne(data))
+	fmt.Println(time.Since(start))
+
+	start = time.Now()
 	fmt.Printf("Part Two: %d \n", PartTwo(data))
+	fmt.Println(time.Since(start))
 }

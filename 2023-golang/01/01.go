@@ -6,6 +6,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/lubieniebieski/advent-of-code/2023-golang/tools"
 )
@@ -80,7 +81,11 @@ func parsedData() string {
 
 func main() {
 	data := parsedData()
-
+	start := time.Now()
 	fmt.Printf("Part One: %d \n", PartOne(data))
+	fmt.Println(time.Since(start))
+
+	start = time.Now()
 	fmt.Printf("Part Two: %d \n", PartTwo(data))
+	fmt.Println(time.Since(start))
 }

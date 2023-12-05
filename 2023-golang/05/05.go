@@ -34,10 +34,6 @@ type Seed struct {
 	seedMapsMap map[string][]SeedMapType
 }
 
-func SeedFromInput(input string) Seed {
-	return Seed{}
-}
-
 func (s Seed) SeedToSomething(seed int, target string) int {
 	transformations := []string{"seed", "soil", "fertilizer", "water", "light", "temperature", "humidity", "location"}
 	lastIndex := slices.Index(transformations, target)
@@ -62,6 +58,10 @@ func (s Seed) SomethingToSomething(value int, source string, target string) int 
 	return value
 }
 
+func NewSeedWithSeedMapsMap(seedId int, seedMapsMap map[string][]SeedMapType) Seed {
+	return Seed{SeedId: seedId, seedMapsMap: seedMapsMap}
+}
+
 func SeedsFromString(input string) (seeds []Seed) {
 	stringsArray := tools.ExtractStringsFromString(input)
 	seedMapsMap := make(map[string][]SeedMapType)
@@ -69,7 +69,6 @@ func SeedsFromString(input string) (seeds []Seed) {
 	if len(stringsArray) == 0 || len(stringsArray[0]) < 7 {
 		return seeds
 	}
-	input = stringsArray[0][7:]
 
 	for _, line := range stringsArray[1:] {
 		if strings.HasSuffix(line, ":") {
@@ -82,6 +81,12 @@ func SeedsFromString(input string) (seeds []Seed) {
 			seedMapsMap[currentMapping] = append(seedMapsMap[currentMapping], seedMapType)
 		}
 	}
+
+	return SimpleSeedsFromString(stringsArray[0][7:], seedMapsMap)
+
+}
+
+func SimpleSeedsFromString(input string, seedMapsMap map[string][]SeedMapType) (seeds []Seed) {
 	for _, seed := range strings.Split(input, " ") {
 		id, _ := strconv.Atoi(seed)
 		seeds = append(seeds, Seed{SeedId: id, seedMapsMap: seedMapsMap})
@@ -102,7 +107,23 @@ func PartOne(input string) (result int) {
 }
 
 func PartTwo(input string) (result int) {
-	return result
+	seeds := SeedsFromString(input)
+	if len(seeds) == 0 {
+
+		return result
+	}
+	newSeeds := []Seed{}
+	for i := 0; i < len(seeds); i += 2 {
+		times := seeds[i+1].SeedId
+		maxJ := seeds[i].SeedId + times
+		for j := seeds[i].SeedId; j < maxJ; j++ {
+			newSeeds = append(newSeeds, Seed{SeedId: j, seedMapsMap: seeds[i].seedMapsMap})
+		}
+	}
+	sort.Slice(newSeeds, func(i, j int) bool {
+		return newSeeds[i].SeedToSomething(newSeeds[i].SeedId, "location") < newSeeds[j].SeedToSomething(newSeeds[j].SeedId, "location")
+	})
+	return newSeeds[0].SeedToSomething(newSeeds[0].SeedId, "location")
 }
 
 func parsedData() string {

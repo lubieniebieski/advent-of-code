@@ -54,7 +54,7 @@ var testCases = []struct {
 	},
 	{
 		``,
-		1,
+		46,
 	},
 }
 
@@ -64,9 +64,8 @@ func TestPartOne(t *testing.T) {
 	toolstest.CompareWithExample(t, want, got)
 }
 func TestPartTwo(t *testing.T) {
-	t.SkipNow()
 	want := testCases[2].want
-	got := PartTwo(testCases[2].input)
+	got := PartTwo(testCases[1].input)
 	toolstest.CompareWithExample(t, want, got)
 }
 
@@ -78,7 +77,7 @@ func BenchmarkPartOne(b *testing.B) {
 
 func BenchmarkPartTwo(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		PartOne(testCases[2].input)
+		PartTwo(testCases[1].input)
 	}
 }
 

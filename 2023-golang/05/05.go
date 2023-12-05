@@ -83,7 +83,6 @@ func SeedsFromString(input string) (seeds []Seed) {
 	}
 
 	return SimpleSeedsFromString(stringsArray[0][7:], seedMapsMap)
-
 }
 
 func SimpleSeedsFromString(input string, seedMapsMap map[string][]SeedMapType) (seeds []Seed) {
@@ -112,18 +111,22 @@ func PartTwo(input string) (result int) {
 
 		return result
 	}
-	newSeeds := []Seed{}
+	min := 1000000000000000000
 	for i := 0; i < len(seeds); i += 2 {
 		times := seeds[i+1].SeedId
 		maxJ := seeds[i].SeedId + times
 		for j := seeds[i].SeedId; j < maxJ; j++ {
-			newSeeds = append(newSeeds, Seed{SeedId: j, seedMapsMap: seeds[i].seedMapsMap})
+			seed := Seed{
+				SeedId:      j,
+				seedMapsMap: seeds[i].seedMapsMap,
+			}
+			if seed.SeedToSomething(j, "location") < min {
+				min = seed.SeedToSomething(j, "location")
+			}
 		}
 	}
-	sort.Slice(newSeeds, func(i, j int) bool {
-		return newSeeds[i].SeedToSomething(newSeeds[i].SeedId, "location") < newSeeds[j].SeedToSomething(newSeeds[j].SeedId, "location")
-	})
-	return newSeeds[0].SeedToSomething(newSeeds[0].SeedId, "location")
+
+	return min
 }
 
 func parsedData() string {

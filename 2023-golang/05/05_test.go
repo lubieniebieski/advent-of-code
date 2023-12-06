@@ -91,7 +91,7 @@ func TestSeedsFromString(t *testing.T) {
 			{SeedId: 55},
 			{SeedId: 13},
 		}
-		got := SeedsFromString(`seeds: 79 14 55 13`)
+		got, _ := SeedsFromString(`seeds: 79 14 55 13`)
 		for i := range want {
 			if got[i].SeedId != want[i].SeedId {
 				t.Errorf("Wrong seed id, got: %d, want: %d.", got[i].SeedId, want[i].SeedId)
@@ -103,93 +103,17 @@ func TestSeedsFromString(t *testing.T) {
 			{Destination: 50, Source: 98, Range: 2},
 			{Destination: 52, Source: 50, Range: 48},
 		}
-		got := SeedsFromString(testCases[1].input)[0].seedMapsMap["seed-to-soil"]
-		if !reflect.DeepEqual(got, want) {
-			t.Errorf("Wrong seed map type, got: %v, want: %v.", got, want)
+		_, seedsMapsMap := SeedsFromString(testCases[1].input)
+		if !reflect.DeepEqual(seedsMapsMap["seed-to-soil"], want) {
+			t.Errorf("Wrong seed map type, got: %v, want: %v.", seedsMapsMap["seed-to-soil"], want)
 		}
 	})
 
-	t.Run("SeedsMap soil-to-fertilizer is parsed correctly", func(t *testing.T) {
-		want := []SeedMapType{
-			{Destination: 0, Source: 15, Range: 37},
-			{Destination: 37, Source: 52, Range: 2},
-			{Destination: 39, Source: 0, Range: 15},
-		}
-		got := SeedsFromString(testCases[1].input)[0].seedMapsMap["soil-to-fertilizer"]
-
-		if !reflect.DeepEqual(got, want) {
-			t.Errorf("Wrong results, got: %v, want: %v.", got, want)
-		}
-	})
-	t.Run("SeedsMap fertilizer-to-water is parsed correctly", func(t *testing.T) {
-		want := []SeedMapType{
-			{Destination: 49, Source: 53, Range: 8},
-			{Destination: 0, Source: 11, Range: 42},
-			{Destination: 42, Source: 0, Range: 7},
-			{Destination: 57, Source: 7, Range: 4},
-		}
-		got := SeedsFromString(testCases[1].input)[0].seedMapsMap["fertilizer-to-water"]
-		if !reflect.DeepEqual(got, want) {
-			t.Errorf("Wrong seed map type, got: %v, want: %v.", got, want)
-		}
-	})
-	t.Run("SeedsMap water-to-light is parsed correctly", func(t *testing.T) {
-		want := []SeedMapType{
-			{Destination: 88, Source: 18, Range: 7},
-			{Destination: 18, Source: 25, Range: 70},
-		}
-		got := SeedsFromString(testCases[1].input)[0].seedMapsMap["water-to-light"]
-		if !reflect.DeepEqual(got, want) {
-			t.Errorf("Wrong seed map type, got: %v, want: %v.", got, want)
-		}
-	})
-	t.Run("SeedsMap light-to-temperature is parsed correctly", func(t *testing.T) {
-		want := []SeedMapType{
-			{Destination: 45, Source: 77, Range: 23},
-			{Destination: 81, Source: 45, Range: 19},
-			{Destination: 68, Source: 64, Range: 13},
-		}
-		got := SeedsFromString(testCases[1].input)[0].seedMapsMap["light-to-temperature"]
-		if !reflect.DeepEqual(got, want) {
-			t.Errorf("Wrong seed map type, got: %v, want: %v.", got, want)
-		}
-	})
-	t.Run("SeedsMap temperature-to-humidity is parsed correctly", func(t *testing.T) {
-		want := []SeedMapType{
-			{Destination: 0, Source: 69, Range: 1},
-			{Destination: 1, Source: 0, Range: 69},
-		}
-		got := SeedsFromString(testCases[1].input)[0].seedMapsMap["temperature-to-humidity"]
-		if !reflect.DeepEqual(got, want) {
-			t.Errorf("Wrong seed map type, got: %v, want: %v.", got, want)
-		}
-	})
-	t.Run("SeedsMap humidity-to-location is parsed correctly", func(t *testing.T) {
-		want := []SeedMapType{
-			{Destination: 60, Source: 56, Range: 37},
-			{Destination: 56, Source: 93, Range: 4},
-		}
-		got := SeedsFromString(testCases[1].input)[0].seedMapsMap["humidity-to-location"]
-		if !reflect.DeepEqual(got, want) {
-			t.Errorf("Wrong seed map type, got: %v, want: %v.", got, want)
-		}
-	})
 }
 
 func TestSeed_SeedToSomething(t *testing.T) {
-	seed := Seed{
-		seedMapsMap: map[string][]SeedMapType{
-			"seed-to-soil": {
-				{Destination: 50, Source: 98, Range: 2},
-				{Destination: 52, Source: 50, Range: 48},
-			},
-			"soil-to-fertilizer": {
-				{Destination: 0, Source: 15, Range: 37},
-				{Destination: 37, Source: 52, Range: 2},
-				{Destination: 39, Source: 0, Range: 15},
-			},
-		},
-	}
+	_, seedMapsMap := SeedsFromString(testCases[1].input)
+
 	t.Run("SeedToSomething returns correct values when converting to soil", func(t *testing.T) {
 		testCases := []struct {
 			seed int
@@ -208,7 +132,7 @@ func TestSeed_SeedToSomething(t *testing.T) {
 			{99, 51},
 		}
 		for _, testCase := range testCases {
-			got := seed.SeedToSomething(testCase.seed, "soil")
+			got := Seed{SeedId: testCase.seed}.SeedToSomething("soil", seedMapsMap)
 			if got != testCase.want {
 				t.Errorf("Wrong soil for seed %d, got: %d, want: %d.", testCase.seed, got, testCase.want)
 			}
@@ -220,12 +144,12 @@ func TestSeed_SeedToSomething(t *testing.T) {
 			want int
 		}{
 			{13, 52},
-			// {14, 53},
-			// {55, 57},
-			// {79, 81},
+			{14, 53},
+			{55, 57},
+			{79, 81},
 		}
 		for _, testCase := range testCases {
-			got := seed.SeedToSomething(testCase.seed, "fertilizer")
+			got := Seed{SeedId: testCase.seed}.SeedToSomething("fertilizer", seedMapsMap)
 			if got != testCase.want {
 				t.Errorf("Wrong fertilizer for seed %d, got: %d, want: %d.", testCase.seed, got, testCase.want)
 			}

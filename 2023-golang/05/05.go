@@ -31,25 +31,21 @@ func SeedMapTypeFromString(input string) (smt SeedMapType, err error) {
 }
 
 type Seed struct {
-	SeedId      int
-	seedMapsMap map[string][]SeedMapType
+	SeedId int
 }
 
-func (s Seed) SeedToSomething(seed int, target string) int {
+func (s Seed) SeedToSomething(target string, seedMapsMap map[string][]SeedMapType) (seed int) {
 	transformations := []string{"seed", "soil", "fertilizer", "water", "light", "temperature", "humidity", "location"}
 	lastIndex := slices.Index(transformations, target)
+	seed = s.SeedId
 	for i := 1; i <= lastIndex; i++ {
-		seed = s.SomethingToSomething(seed, transformations[i-1], transformations[i])
+		seed = s.SomethingToSomething(seed, transformations[i-1], transformations[i], seedMapsMap)
 	}
 	return seed
 }
 
-func (s Seed) SomethingToSomething(value int, source string, target string) int {
-
-	mySlice := s.seedMapsMap[source+"-to-"+target]
-	sort.Slice(mySlice, func(i, j int) bool {
-		return mySlice[i].Destination < mySlice[j].Destination
-	})
+func (s Seed) SomethingToSomething(value int, source string, target string, seedMapsMap map[string][]SeedMapType) int {
+	mySlice := seedMapsMap[source+"-to-"+target]
 
 	for _, seedMapType := range mySlice {
 		if value >= seedMapType.Source && value < seedMapType.Source+seedMapType.Range {
@@ -59,16 +55,12 @@ func (s Seed) SomethingToSomething(value int, source string, target string) int 
 	return value
 }
 
-func NewSeedWithSeedMapsMap(seedId int, seedMapsMap map[string][]SeedMapType) Seed {
-	return Seed{SeedId: seedId, seedMapsMap: seedMapsMap}
-}
-
-func SeedsFromString(input string) (seeds []Seed) {
+func SeedsFromString(input string) (seeds []Seed, seedsMapsMap map[string][]SeedMapType) {
 	stringsArray := tools.ExtractStringsFromString(input)
 	seedMapsMap := make(map[string][]SeedMapType)
 	currentMapping := ""
 	if len(stringsArray) == 0 || len(stringsArray[0]) < 7 {
-		return seeds
+		return seeds, seedMapsMap
 	}
 
 	for _, line := range stringsArray[1:] {
@@ -83,31 +75,31 @@ func SeedsFromString(input string) (seeds []Seed) {
 		}
 	}
 
-	return SimpleSeedsFromString(stringsArray[0][7:], seedMapsMap)
+	return SimpleSeedsFromString(stringsArray[0][7:]), seedMapsMap
 }
 
-func SimpleSeedsFromString(input string, seedMapsMap map[string][]SeedMapType) (seeds []Seed) {
+func SimpleSeedsFromString(input string) (seeds []Seed) {
 	for _, seed := range strings.Split(input, " ") {
 		id, _ := strconv.Atoi(seed)
-		seeds = append(seeds, Seed{SeedId: id, seedMapsMap: seedMapsMap})
+		seeds = append(seeds, Seed{SeedId: id})
 	}
 	return seeds
 }
 
 func PartOne(input string) (result int) {
-	seeds := SeedsFromString(input)
+	seeds, seedMapsMap := SeedsFromString(input)
 	if len(seeds) == 0 {
 		return result
 	}
 	sort.Slice(seeds, func(i, j int) bool {
-		return seeds[i].SeedToSomething(seeds[i].SeedId, "location") < seeds[j].SeedToSomething(seeds[j].SeedId, "location")
+		return seeds[i].SeedToSomething("location", seedMapsMap) < seeds[j].SeedToSomething("location", seedMapsMap)
 	})
 
-	return seeds[0].SeedToSomething(seeds[0].SeedId, "location")
+	return seeds[0].SeedToSomething("location", seedMapsMap)
 }
 
 func PartTwo(input string) (result int) {
-	seeds := SeedsFromString(input)
+	seeds, seedMapsMap := SeedsFromString(input)
 	if len(seeds) == 0 {
 		return result
 	}
@@ -117,11 +109,10 @@ func PartTwo(input string) (result int) {
 		maxJ := seeds[i].SeedId + times
 		for j := seeds[i].SeedId; j < maxJ; j++ {
 			seed := Seed{
-				SeedId:      j,
-				seedMapsMap: seeds[i].seedMapsMap,
+				SeedId: j,
 			}
-			if seed.SeedToSomething(j, "location") < min {
-				min = seed.SeedToSomething(j, "location")
+			if seed.SeedToSomething("location", seedMapsMap) < min {
+				min = seed.SeedToSomething("location", seedMapsMap)
 			}
 		}
 	}

@@ -14,17 +14,45 @@ type Race struct {
 }
 
 func (r Race) WinningOptionsCount() (result int) {
-	for speed := 1; speed < r.Time; speed++ {
-		distance := speed * (r.Time - speed)
-		if distance > r.Distance {
-			result++
-		}
-	}
-	return result
+	return r.LastWinningIndex() - r.FirstWinningIndex() + 1
 }
 
-func (r Race) HowFarWithSpeed(speed, distance int) int {
-	return speed * distance
+func (r Race) FirstWinningIndex() (result int) {
+	low := 1
+	high := r.Time - 1
+
+	for low <= high {
+		mid := (low + high) / 2
+
+		if r.DistanceCoveredWithSpeed(mid) > r.Distance {
+			high = mid - 1
+		} else {
+			low = mid + 1
+		}
+	}
+
+	return low
+}
+
+func (r Race) LastWinningIndex() (result int) {
+	low := 1
+	high := r.Time - 1
+
+	for low <= high {
+		mid := (low + high) / 2
+
+		if r.DistanceCoveredWithSpeed(mid) > r.Distance {
+			low = mid + 1
+		} else {
+			high = mid - 1
+		}
+	}
+
+	return high
+}
+
+func (r Race) DistanceCoveredWithSpeed(speed int) int {
+	return speed * (r.Time - speed)
 }
 
 func ParseRaces(input string) (result []Race) {

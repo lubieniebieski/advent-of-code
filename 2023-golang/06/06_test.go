@@ -23,7 +23,7 @@ var testCases = []struct {
 	},
 	{
 		``,
-		46,
+		71503,
 	},
 }
 
@@ -33,7 +33,6 @@ func TestPartOne(t *testing.T) {
 	toolstest.CompareWithExample(t, want, got)
 }
 func TestPartTwo(t *testing.T) {
-	t.SkipNow()
 	want := testCases[2].want
 	got := PartTwo(testCases[1].input)
 	toolstest.CompareWithExample(t, want, got)

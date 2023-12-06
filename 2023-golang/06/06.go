@@ -50,8 +50,20 @@ func PartOne(input string) (result int) {
 }
 
 func PartTwo(input string) (result int) {
+	lines := strings.Split(input, "\n")
+	timeStr := strings.Fields(lines[0])
+	distanceStr := strings.Fields(lines[1])
+	var resultTimeStr string
+	var resultDistanceStr string
+	for i := 1; i < len(timeStr); i++ {
+		resultTimeStr += timeStr[i]
+		resultDistanceStr += distanceStr[i]
+	}
 
-	return result
+	timeInt, _ := strconv.Atoi(resultTimeStr)
+	distanceInt, _ := strconv.Atoi(resultDistanceStr)
+	race := Race{Time: timeInt, Distance: distanceInt}
+	return race.WinningOptionsCount()
 }
 
 func parsedData() string {

@@ -26,7 +26,7 @@ var testCases = []struct {
 	},
 	{
 		``,
-		1,
+		5905,
 	},
 	{
 		`2345A 1
@@ -70,33 +70,47 @@ var testCases = []struct {
 }
 
 func TestPartOne(t *testing.T) {
-	want := testCases[1].want
-	got := PartOne(testCases[1].input)
-	toolstest.CompareWithExample(t, want, got)
-}
+	t.Run("Original input", func(t *testing.T) {
+		want := testCases[1].want
+		got := PartOne(testCases[1].input)
+		toolstest.CompareWithExample(t, want, got)
+	})
 
-func TestPartOneV2(t *testing.T) {
-	want := testCases[3].want
-	got := PartOne(testCases[3].input)
-	toolstest.CompareWithExample(t, want, got)
-}
-func TestPartOneV3(t *testing.T) {
-	want := testCases[4].want
-	got := PartOne(testCases[4].input)
-	toolstest.CompareWithExample(t, want, got)
-}
+	t.Run("More test cases #1", func(t *testing.T) {
+		want := testCases[3].want
+		got := PartOne(testCases[3].input)
+		toolstest.CompareWithExample(t, want, got)
+	})
+	t.Run("More test cases #2", func(t *testing.T) {
+		want := testCases[4].want
+		got := PartOne(testCases[4].input)
+		toolstest.CompareWithExample(t, want, got)
+	})
 
-func TestPartOneOriginal(t *testing.T) {
-	want := 250347426
-	got := PartOne(parsedData())
-	toolstest.CompareWithExample(t, want, got)
+	t.Run("More test cases #3", func(t *testing.T) {
+		want := 250347426
+		got := PartOne(parsedData())
+		toolstest.CompareWithExample(t, want, got)
+	})
 }
 
 func TestPartTwo(t *testing.T) {
-	t.SkipNow()
-	want := testCases[2].want
-	got := PartTwo(testCases[1].input)
-	toolstest.CompareWithExample(t, want, got)
+	t.Run("Original input", func(t *testing.T) {
+		want := testCases[2].want
+		got := PartTwo(testCases[1].input)
+		toolstest.CompareWithExample(t, want, got)
+	})
+	t.Run("More test cases #1", func(t *testing.T) {
+		want := 6839
+		got := PartTwo(testCases[3].input)
+		toolstest.CompareWithExample(t, want, got)
+	})
+
+	t.Run("More test cases #3", func(t *testing.T) {
+		want := 251224870
+		got := PartTwo(parsedData())
+		toolstest.CompareWithExample(t, want, got)
+	})
 }
 
 func BenchmarkPartOne(b *testing.B) {
@@ -127,60 +141,59 @@ func TestHand_Strength(t *testing.T) {
 		{"AAAAA", FiveOfAKind},
 		{"AA8AA", FourOfAKind},
 		{"KKKAA", FullHouse},
-		{"QQQJJ", FullHouse},
-		{"22233", FullHouse},
-		{"77799", FullHouse},
-		{"JJJTT", FullHouse},
-		{"555KK", FullHouse},
-		{"444QQ", FullHouse},
-		{"888AA", FullHouse},
-		{"66622", FullHouse},
-		{"999TT", FullHouse},
 		{"23432", TwoPairs},
 		{"A23A4", OnePair},
 		{"23456", HighCard},
-		{"12345", HighCard},
-		{"A2345", HighCard},
-		{"A2346", HighCard},
-		{"A2347", HighCard},
-		{"A2348", HighCard},
-		{"A2349", HighCard},
-		{"A234T", HighCard},
-		{"A234J", HighCard},
-		{"A234Q", HighCard},
-		{"A234K", HighCard},
-		{"A2356", HighCard},
-		{"A2357", HighCard},
-		{"A2358", HighCard},
-		{"A2359", HighCard},
-		{"A235T", HighCard},
-		{"A235J", HighCard},
-		{"A235Q", HighCard},
-		{"A235K", HighCard},
-		{"A2367", HighCard},
-		{"A2368", HighCard},
-		{"A2369", HighCard},
-		{"A236T", HighCard},
-		{"A236J", HighCard},
-		{"A236Q", HighCard},
-		{"A236K", HighCard},
-		{"A2378", HighCard},
-		{"A2379", HighCard},
-		{"A237T", HighCard},
-		{"A237J", HighCard},
-		{"A237Q", HighCard},
-		{"A237K", HighCard},
-		{"A2389", HighCard},
-		{"A238T", HighCard},
-		{"A238J", HighCard},
-		{"A238Q", HighCard},
-		{"A238K", HighCard},
-		{"JJJJJ", FiveOfAKind},
 	}
 
 	for _, tc := range testCases {
 		t.Run(tc.input, func(t *testing.T) {
 			got := Hand{StrValue: tc.input}.Strength()
+			toolstest.CompareWithExample(t, tc.want, got)
+		})
+	}
+}
+func TestHand_StrengthV2(t *testing.T) {
+	testCases := []struct {
+		input string
+		want  int
+	}{
+		{"32T3K", OnePair},
+		{"KK677", TwoPairs},
+		{"T55J5", FourOfAKind},
+		{"JJ234", ThreeOfAKind},
+		{"JK234", OnePair},
+		{"JJ222", FiveOfAKind},
+		{"KTJJT", FourOfAKind},
+		{"KKJJT", FourOfAKind},
+		{"KKJJK", FiveOfAKind},
+		{"QKJJT", ThreeOfAKind},
+		{"QQQJA", FourOfAKind},
+		{"JJJJJ", FiveOfAKind},
+		{"JJJAJ", FiveOfAKind},
+		{"JJAAJ", FiveOfAKind},
+		{"JAAAJ", FiveOfAKind},
+		{"AAAAJ", FiveOfAKind},
+		{"JAAAA", FiveOfAKind},
+		{"AAAAA", FiveOfAKind},
+		{"AATTJ", FullHouse},
+		{"23332", FullHouse},
+		{"234JJ", ThreeOfAKind},
+		{"2345J", OnePair},
+		{"23444", ThreeOfAKind},
+		{"23422", ThreeOfAKind},
+		{"23433", ThreeOfAKind},
+		{"AAA33", FullHouse},
+		{"A3AA4", ThreeOfAKind},
+		{"33AA3", FullHouse},
+		{"13AA3", TwoPairs},
+		{"12345", HighCard},
+		{"1234J", OnePair},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.input, func(t *testing.T) {
+			got := Hand{StrValue: tc.input}.StrengthV2()
 			toolstest.CompareWithExample(t, tc.want, got)
 		})
 	}
@@ -220,12 +233,54 @@ func TestSortHandsByStrength(t *testing.T) {
 				t.Errorf("SortHandsByStrength() = %v, want %v", got, want)
 			}
 		}
-
 	})
+}
 
+func TestSortHandsByStrengthV2(t *testing.T) {
+	t.Run("More test cases", func(t *testing.T) {
+		input := []Hand{
+			{StrValue: "52346"},
+			{StrValue: "23456"},
+			{StrValue: "54321"},
+		}
+		want := []Hand{
+			{StrValue: "23456"},
+			{StrValue: "52346"},
+			{StrValue: "54321"},
+		}
+		got := SortHandsByStrengthAsc(input)
+		for i, hand := range got {
+			if hand.StrValue != want[i].StrValue {
+				t.Errorf("SortHandsByStrength() = %v, want %v", got, want)
+			}
+		}
+	})
 }
 
 func TestCompareEqualTypesOfHands(t *testing.T) {
+
+	testCases := []struct {
+		lower  Hand
+		higher Hand
+	}{
+		{Hand{StrValue: "T55J5"}, Hand{StrValue: "QQQJA"}},
+		{Hand{StrValue: "QJJQ2"}, Hand{StrValue: "QQQQ2"}},
+		{Hand{StrValue: "2JJJJ"}, Hand{StrValue: "JJJJ2"}},
+		{Hand{StrValue: "AAAAJ"}, Hand{StrValue: "AAAAA"}},
+		{Hand{StrValue: "JJJJJ"}, Hand{StrValue: "QQQQQ"}},
+	}
+
+	for _, tc := range testCases {
+		name := fmt.Sprint(tc.lower.StrValue + " is lower than " + tc.higher.StrValue)
+		t.Run(name, func(t *testing.T) {
+			if IsFirstHandHigher(tc.lower, tc.higher) {
+				t.Errorf("%v is higher than %v, should be the other way around", tc.lower.StrValue, tc.higher.StrValue)
+			}
+		})
+	}
+}
+
+func TestCompareEqualTypesOfHandsV2(t *testing.T) {
 	testCases := []struct {
 		lower  Hand
 		higher Hand
@@ -233,15 +288,16 @@ func TestCompareEqualTypesOfHands(t *testing.T) {
 		{Hand{StrValue: "11111"}, Hand{StrValue: "1111A"}},
 		{Hand{StrValue: "1111Q"}, Hand{StrValue: "1111K"}},
 		{Hand{StrValue: "1111K"}, Hand{StrValue: "Q1111"}},
-		{Hand{StrValue: "1111T"}, Hand{StrValue: "1111J"}},
-		{Hand{StrValue: "2AAAA"}, Hand{StrValue: "JJJJ2"}},
+		{Hand{StrValue: "1111J"}, Hand{StrValue: "1111T"}},
+		{Hand{StrValue: "JJJJ2"}, Hand{StrValue: "2AAAA"}},
 		{Hand{StrValue: "2222T"}, Hand{StrValue: "TT2TT"}},
+		{Hand{StrValue: "JJJJ2"}, Hand{StrValue: "2JJJJ"}},
 	}
 
 	for _, tc := range testCases {
 		name := fmt.Sprint(tc.lower.StrValue + " is lower than " + tc.higher.StrValue)
 		t.Run(name, func(t *testing.T) {
-			if IsFirstHandHigher(tc.lower, tc.higher) {
+			if IsFirstHandHigherV2(tc.lower, tc.higher) {
 				t.Errorf("%v is higher than %v, should be the other way around", tc.lower.StrValue, tc.higher.StrValue)
 			}
 		})

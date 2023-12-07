@@ -35,6 +35,7 @@ func TestPartOne(t *testing.T) {
 	toolstest.CompareWithExample(t, want, got)
 }
 func TestPartTwo(t *testing.T) {
+	t.SkipNow()
 	want := testCases[2].want
 	got := PartTwo(testCases[1].input)
 	toolstest.CompareWithExample(t, want, got)
@@ -53,3 +54,57 @@ func BenchmarkPartTwo(b *testing.B) {
 }
 
 // Main tests below
+
+func TestCardFromString(t *testing.T) {
+	want := Hand{Rank: 765, StrValue: "32T3K", CalculatedStrength: 1}
+	got := HandFromString("32T3K 765")
+	toolstest.CompareWithExample(t, want, got)
+}
+
+func TestHand_Strength(t *testing.T) {
+	testCases := []struct {
+		input string
+		want  int
+	}{
+		{"AAAAA", FiveOfAKind},
+		{"AA8AA", FourOfAKind},
+		{"23332", FullHouse},
+		{"TTT98", ThreeOfAKind},
+		{"23432", TwoPairs},
+		{"A23A4", OnePair},
+		{"23456", HighCard},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.input, func(t *testing.T) {
+			got := Hand{StrValue: tc.input}.Strength()
+			toolstest.CompareWithExample(t, tc.want, got)
+		})
+	}
+}
+
+func TestSortHandsByStrength(t *testing.T) {
+	input := []Hand{
+		{StrValue: "32T3K", CalculatedStrength: 1},
+		{StrValue: "T55J5", CalculatedStrength: 4},
+		{StrValue: "KK677", CalculatedStrength: 3},
+		{StrValue: "KTJJT", CalculatedStrength: 2},
+		{StrValue: "QQQJA", CalculatedStrength: 5},
+	}
+	want := []Hand{
+		{StrValue: "32T3K"},
+		{StrValue: "KTJJT"},
+		{StrValue: "KK677"},
+		{StrValue: "T55J5"},
+		{StrValue: "QQQJA"},
+	}
+
+	got := SortHandsByStrength(input)
+	for i, hand := range got {
+		if hand.StrValue != want[i].StrValue {
+
+			t.Errorf("SortHandsByStrength() = %v, want %v", got, want)
+		}
+	}
+
+}

@@ -12,10 +12,10 @@ import (
 )
 
 func PartOne(input string) (result int) {
-
-	hands := SortHandsByStrength(HandsFromString(input))
+	hands := SortHandsByStrengthAsc(HandsFromString(input))
 	for i, hand := range hands {
 		result += hand.Rank * (i + 1)
+
 	}
 	return result
 }
@@ -62,19 +62,19 @@ type Hand struct {
 }
 
 var cardValues = map[string]int{
-	"2":  0,
-	"3":  1,
-	"4":  2,
-	"5":  3,
-	"6":  4,
-	"7":  5,
-	"8":  6,
-	"9":  7,
-	"10": 8,
-	"J":  9,
-	"Q":  10,
-	"K":  11,
-	"A":  12,
+	"2": 0,
+	"3": 1,
+	"4": 2,
+	"5": 3,
+	"6": 4,
+	"7": 5,
+	"8": 6,
+	"9": 7,
+	"T": 8,
+	"J": 9,
+	"Q": 10,
+	"K": 11,
+	"A": 12,
 }
 
 func HandFromString(str string) (hand Hand) {
@@ -87,7 +87,6 @@ func HandFromString(str string) (hand Hand) {
 }
 
 func (h Hand) Strength() (result int) {
-
 	cards := strings.Split(h.StrValue, "")
 	cardCount := make(map[string]int)
 
@@ -122,7 +121,7 @@ func (h Hand) Strength() (result int) {
 	return result
 }
 
-func SortHandsByStrength(hands []Hand) (result []Hand) {
+func SortHandsByStrengthAsc(hands []Hand) (result []Hand) {
 	sort.Slice(hands, func(a, b int) bool {
 		if hands[a].CalculatedStrength < hands[b].CalculatedStrength {
 			return true

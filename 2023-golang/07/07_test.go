@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/lubieniebieski/advent-of-code/2023-golang/tools/toolstest"
@@ -84,13 +85,7 @@ func TestHand_Strength(t *testing.T) {
 }
 
 func TestSortHandsByStrength(t *testing.T) {
-	input := []Hand{
-		{StrValue: "32T3K", CalculatedStrength: 1},
-		{StrValue: "T55J5", CalculatedStrength: 4},
-		{StrValue: "KK677", CalculatedStrength: 3},
-		{StrValue: "KTJJT", CalculatedStrength: 2},
-		{StrValue: "QQQJA", CalculatedStrength: 5},
-	}
+	input := HandsFromString(testCases[1].input)
 	want := []Hand{
 		{StrValue: "32T3K"},
 		{StrValue: "KTJJT"},
@@ -102,9 +97,27 @@ func TestSortHandsByStrength(t *testing.T) {
 	got := SortHandsByStrength(input)
 	for i, hand := range got {
 		if hand.StrValue != want[i].StrValue {
-
 			t.Errorf("SortHandsByStrength() = %v, want %v", got, want)
 		}
 	}
+}
 
+func TestCompareEqualTypesOfHands(t *testing.T) {
+	testCases := []struct {
+		lower  Hand
+		higher Hand
+	}{
+		{Hand{StrValue: "11111"}, Hand{StrValue: "1111A"}},
+		{Hand{StrValue: "1111Q"}, Hand{StrValue: "1111K"}},
+		{Hand{StrValue: "1111T"}, Hand{StrValue: "1111J"}},
+	}
+
+	for _, tc := range testCases {
+		name := fmt.Sprint(tc.lower.StrValue + " is lower than " + tc.higher.StrValue)
+		t.Run(name, func(t *testing.T) {
+			if IsFirstHandHigher(tc.lower, tc.higher) {
+				t.Errorf("IsFirstHandHigher() = %v, want %v", tc.lower, tc.higher)
+			}
+		})
+	}
 }

@@ -12,12 +12,8 @@ import (
 )
 
 func PartOne(input string) (result int) {
-	stringsArray := tools.ExtractStringsFromString(input)
-	hands := []Hand{}
-	for _, line := range stringsArray {
-		hands = append(hands, HandFromString(line))
-	}
-	hands = SortHandsByStrength(hands)
+
+	hands := SortHandsByStrength(HandsFromString(input))
 	for i, hand := range hands {
 		result += hand.Rank * (i + 1)
 	}
@@ -63,6 +59,22 @@ type Hand struct {
 	Rank               int
 	StrValue           string
 	CalculatedStrength int
+}
+
+var cardValues = map[string]int{
+	"2":  0,
+	"3":  1,
+	"4":  2,
+	"5":  3,
+	"6":  4,
+	"7":  5,
+	"8":  6,
+	"9":  7,
+	"10": 8,
+	"J":  9,
+	"Q":  10,
+	"K":  11,
+	"A":  12,
 }
 
 func HandFromString(str string) (hand Hand) {
@@ -117,16 +129,27 @@ func SortHandsByStrength(hands []Hand) (result []Hand) {
 		} else if hands[a].CalculatedStrength > hands[b].CalculatedStrength {
 			return false
 		} else {
-			for i := 0; i < len(hands[a].StrValue); i++ {
-				if hands[a].StrValue[i] > hands[b].StrValue[i] {
-					return true
-				} else if hands[a].StrValue[i] < hands[b].StrValue[i] {
-					return false
-				}
-			}
-			panic("Duplicate hands")
+			return !IsFirstHandHigher(hands[a], hands[b])
 		}
 	})
+	return hands
+}
 
+func IsFirstHandHigher(a, b Hand) bool {
+	for i := 0; i < len(a.StrValue); i++ {
+		if cardValues[string(a.StrValue[i])] > cardValues[string(b.StrValue[i])] {
+			return true
+		} else if cardValues[string(a.StrValue[i])] < cardValues[string(b.StrValue[i])] {
+			return false
+		}
+	}
+	return false
+}
+
+func HandsFromString(str string) (hands []Hand) {
+	stringsArray := tools.ExtractStringsFromString(str)
+	for _, line := range stringsArray {
+		hands = append(hands, HandFromString(line))
+	}
 	return hands
 }

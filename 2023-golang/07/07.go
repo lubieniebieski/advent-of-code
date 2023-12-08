@@ -173,7 +173,6 @@ func (h Hand) StrengthV2() (result int) {
 	case 1:
 		return FiveOfAKind
 	case 2:
-		// tu rozkmina
 		if cardCountWithJ["J"] == 1 {
 			for _, count := range cardCount {
 				switch count {

@@ -9,37 +9,9 @@ import (
 )
 
 func PartOne(input string) (result int) {
-	strArray := tools.ExtractStringsFromString(input)
-	order := strArray[0]
-	nodes := make(map[string]*Node)
-	for _, line := range strArray[2:] {
-		node := NodeFromString(line)
-		nodes[node.ID] = &node
-	}
-	for _, node := range nodes {
-		node.Left = nodes[node.Left.ID]
-		node.Right = nodes[node.Right.ID]
-	}
-	currentNode := nodes["AAA"]
-
-	i := 0
-	for i < len(order) {
-		if currentNode.ID == "ZZZ" {
-			return result
-		}
-		if string(order[i]) == "L" {
-			currentNode = currentNode.Left
-		} else {
-			currentNode = currentNode.Right
-		}
-		if i == len(order)-1 {
-			i = 0
-		} else {
-			i++
-		}
-		result++
-	}
-	return result
+	order, nodes := PrepareNodes(input)
+	startNode := nodes["AAA"]
+	return FindZZZ(order, startNode, result)
 }
 
 func PartTwo(input string) (result int) {
@@ -83,4 +55,40 @@ func NodeFromString(input string) Node {
 			ID: input[12:15],
 		},
 	}
+}
+
+func PrepareNodes(input string) (string, map[string]*Node) {
+	strArray := tools.ExtractStringsFromString(input)
+	order := strArray[0]
+	nodes := make(map[string]*Node)
+	for _, line := range strArray[2:] {
+		node := NodeFromString(line)
+		nodes[node.ID] = &node
+	}
+	for _, node := range nodes {
+		node.Left = nodes[node.Left.ID]
+		node.Right = nodes[node.Right.ID]
+	}
+	return order, nodes
+}
+
+func FindZZZ(order string, currentNode *Node, result int) int {
+	i := 0
+	for i < len(order) {
+		if currentNode.ID == "ZZZ" {
+			return result
+		}
+		if string(order[i]) == "L" {
+			currentNode = currentNode.Left
+		} else {
+			currentNode = currentNode.Right
+		}
+		if i == len(order)-1 {
+			i = 0
+		} else {
+			i++
+		}
+		result++
+	}
+	return result
 }

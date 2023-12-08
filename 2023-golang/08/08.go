@@ -15,7 +15,25 @@ func PartOne(input string) (result int) {
 }
 
 func PartTwo(input string) (result int) {
-	return result
+	order, nodes := PrepareNodes(input)
+	startNodes := FindStartNodes(nodes)
+
+	outputs := []int{}
+	for _, startNode := range startNodes {
+		outputs = append(outputs, FindXXZ(order, startNode))
+	}
+	return LCM(outputs)
+
+}
+
+func FindStartNodes(nodes map[string]*Node) []*Node {
+	startNodes := []*Node{}
+	for _, n := range nodes {
+		if string(n.ID[2]) == "A" {
+			startNodes = append(startNodes, n)
+		}
+	}
+	return startNodes
 }
 
 func parsedData() string {
@@ -91,4 +109,53 @@ func FindZZZ(order string, currentNode *Node, result int) int {
 		result++
 	}
 	return result
+}
+
+func FindXXZ(order string, currentNode *Node) (result int) {
+	i := 0
+	for i < len(order) {
+		if string(currentNode.ID[2]) == "Z" {
+			return result
+		}
+		if string(order[i]) == "L" {
+			currentNode = currentNode.Left
+		} else {
+			currentNode = currentNode.Right
+		}
+		if i == len(order)-1 {
+			i = 0
+		} else {
+			i++
+		}
+		result++
+	}
+	return result
+}
+
+func JumpLeadsToXXZ(currentNode *Node, direction string) bool {
+	if direction == "L" {
+		if string(currentNode.Left.ID[2]) == "Z" {
+			return true
+		}
+	} else {
+		if string(currentNode.Right.ID[2]) == "Z" {
+			return true
+		}
+	}
+	return false
+}
+
+func LCM(nums []int) int {
+	lcm := nums[0]
+	for i := 1; i < len(nums); i++ {
+		lcm = lcm * nums[i] / GCD(lcm, nums[i])
+	}
+	return lcm
+}
+
+func GCD(a, b int) int {
+	for b != 0 {
+		a, b = b, a%b
+	}
+	return a
 }

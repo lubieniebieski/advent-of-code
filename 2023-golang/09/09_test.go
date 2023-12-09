@@ -24,7 +24,7 @@ var testCases = []struct {
 	},
 	{
 		``,
-		1337,
+		2,
 	},
 }
 
@@ -37,10 +37,9 @@ func TestPartOne(t *testing.T) {
 }
 
 func TestPartTwo(t *testing.T) {
-	t.SkipNow()
 	t.Run("Works for provided example", func(t *testing.T) {
 		want := testCases[2].want
-		got := PartTwo(testCases[2].input)
+		got := PartTwo(testCases[1].input)
 		toolstest.CompareWithExample(t, want, got)
 	})
 }
@@ -84,6 +83,25 @@ func TestLineValues_FindNext(t *testing.T) {
 			input := LineValuesFromString(tc.input)
 			want := tc.want
 			got := input.FindNext()
+			if want != got {
+				t.Errorf("LineValuesFromString(%v) = %v, want %v", input, got, want)
+			}
+		})
+	}
+}
+
+func TestLineValues_FindPrevious(t *testing.T) {
+	testCases := []struct {
+		input string
+		want  int
+	}{
+		{"10 13 16 21 30 45", 5},
+	}
+	for _, tc := range testCases {
+		t.Run(tc.input, func(t *testing.T) {
+			input := LineValuesFromString(tc.input)
+			want := tc.want
+			got := input.FindPrevious()
 			if want != got {
 				t.Errorf("LineValuesFromString(%v) = %v, want %v", input, got, want)
 			}

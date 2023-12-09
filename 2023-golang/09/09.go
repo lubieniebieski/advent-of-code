@@ -19,6 +19,10 @@ func PartOne(input string) (result int) {
 }
 
 func PartTwo(input string) (result int) {
+	strArray := tools.ExtractStringsFromString(input)
+	for _, line := range strArray {
+		result += LineValuesFromString(line).FindPrevious()
+	}
 	return result
 }
 
@@ -67,6 +71,10 @@ func (l LineValues) LastDifference() (result int) {
 	return l.Values[len(l.Values)-1] - l.Values[len(l.Values)-2]
 }
 
+func (l LineValues) FirstDifference() (result int) {
+	return l.Values[1] - l.Values[0]
+}
+
 func (l LineValues) FindNext() (result int) {
 	diffs := LineValues{}
 	for i, val := range l.Values {
@@ -80,6 +88,22 @@ func (l LineValues) FindNext() (result int) {
 		return l.Values[len(l.Values)-1] + l.LastDifference()
 	} else {
 		return l.Values[len(l.Values)-1] + diffs.FindNext()
+	}
+}
+
+func (l LineValues) FindPrevious() (result int) {
+	diffs := LineValues{}
+	for i, val := range l.Values {
+		if i == 0 {
+			continue
+		}
+		diffs.Add(val - l.Values[i-1])
+	}
+
+	if diffs.AllEqual() {
+		return l.Values[0] - l.FirstDifference()
+	} else {
+		return l.Values[0] - diffs.FindPrevious()
 	}
 }
 

@@ -3,17 +3,23 @@ package main
 import (
 	"fmt"
 	"os"
+	"strconv"
+	"strings"
 	"time"
+
+	"github.com/lubieniebieski/advent-of-code/2023-golang/tools"
 )
 
 func PartOne(input string) (result int) {
+	strArray := tools.ExtractStringsFromString(input)
+	for _, line := range strArray {
+		result += LineValuesFromString(line).FindNext()
+	}
 	return result
 }
 
 func PartTwo(input string) (result int) {
-
 	return result
-
 }
 
 func parsedData() string {
@@ -36,3 +42,45 @@ func main() {
 }
 
 // Main code
+
+type LineValues struct {
+	Values []int
+}
+
+func (l *LineValues) Add(val int) {
+	l.Values = append(l.Values, val)
+}
+
+func (l LineValues) Sum() (result int) {
+	for _, val := range l.Values {
+		result += val
+	}
+	return result
+}
+func (l LineValues) LastDifference() (result int) {
+
+	return l.Values[len(l.Values)-1] - l.Values[len(l.Values)-2]
+}
+
+func (l LineValues) FindNext() (result int) {
+	diffs := LineValues{}
+	for i, val := range l.Values {
+		if i == 0 {
+			continue
+		}
+		diffs.Add(val - l.Values[i-1])
+	}
+	if diffs.Sum() == 0 {
+		return l.Values[len(l.Values)-1] + l.LastDifference()
+	} else {
+		return l.Values[len(l.Values)-1] + diffs.FindNext()
+	}
+}
+
+func LineValuesFromString(input string) (result LineValues) {
+	for _, val := range strings.Split(input, " ") {
+		val, _ := strconv.Atoi(val)
+		result.Values = append(result.Values, val)
+	}
+	return result
+}

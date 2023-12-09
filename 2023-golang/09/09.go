@@ -51,14 +51,19 @@ func (l *LineValues) Add(val int) {
 	l.Values = append(l.Values, val)
 }
 
-func (l LineValues) Sum() (result int) {
-	for _, val := range l.Values {
-		result += val
+func (l LineValues) AllEqual() bool {
+	for i, val := range l.Values {
+		if i == 0 {
+			continue
+		}
+		if val != l.Values[i-1] {
+			return false
+		}
 	}
-	return result
+	return true
 }
-func (l LineValues) LastDifference() (result int) {
 
+func (l LineValues) LastDifference() (result int) {
 	return l.Values[len(l.Values)-1] - l.Values[len(l.Values)-2]
 }
 
@@ -70,7 +75,8 @@ func (l LineValues) FindNext() (result int) {
 		}
 		diffs.Add(val - l.Values[i-1])
 	}
-	if diffs.Sum() == 0 {
+
+	if diffs.AllEqual() {
 		return l.Values[len(l.Values)-1] + l.LastDifference()
 	} else {
 		return l.Values[len(l.Values)-1] + diffs.FindNext()

@@ -11,36 +11,11 @@ import (
 )
 
 func PartOne(input string) (result int) {
-	grid := GridFromString(input)
-	galaxyCoordinates := []Point{}
-	for y, row := range grid.tiles {
-		for x, tile := range row {
-			if tile.IsGalaxy() {
-				galaxyCoordinates = append(galaxyCoordinates, Point{x, y})
-			}
-		}
-	}
-
-	pairs := [][]Point{}
-	for i := 0; i < len(galaxyCoordinates); i++ {
-		for j := i + 1; j < len(galaxyCoordinates); j++ {
-			pair := []Point{galaxyCoordinates[i], galaxyCoordinates[j]}
-			pairs = append(pairs, pair)
-		}
-	}
-
-	for _, pair := range pairs {
-		length := grid.ShortestPathBetweenGalaxies(pair[0], pair[1])
-		if length > 0 {
-			result += length
-		}
-	}
-
-	return result
+	return Calculate(input, 1)
 }
 
 func PartTwo(input string) (result int) {
-	return result
+	return Calculate(input, 1000000)
 }
 
 func parsedData() string {
@@ -90,7 +65,9 @@ func (t Tile) String() string {
 }
 
 type Grid struct {
-	tiles [][]Tile
+	tiles        [][]Tile
+	EmptyRows    []int
+	EmptyColumns []int
 }
 
 func (g Grid) String() string {
@@ -104,14 +81,22 @@ func (g Grid) String() string {
 	return result
 }
 
-func (g Grid) ShortestPathBetweenGalaxies(source, destination Point) (result int) {
-	x := destination.x - source.x
-	y := destination.y - source.y
-	return int(math.Abs(float64(x)) + math.Abs(float64(y)))
+func (g Grid) ShortestPathBetweenGalaxies(source, destination Point, emptyMultiplier int) (result int) {
+	multiplier := emptyMultiplier
+	thingToSubtract := 0
+	if multiplier > 1 {
+		thingToSubtract = 1
+	}
+	emptyColumnsCount := g.CountEmptyColumnsBetweenPoints(source, destination)
+	emptyRowsCount := g.CountEmptyRowsBetweenPoints(source, destination)
+	x := int(math.Abs(float64(destination.x-source.x))) + emptyColumnsCount*multiplier - emptyColumnsCount*thingToSubtract
+	y := int(math.Abs(float64(destination.y-source.y))) + emptyRowsCount*multiplier - emptyRowsCount*thingToSubtract
+
+	return x + y
 }
 
 func GridFromString(input string) (grid Grid) {
-	strArray := ModifyStringForGalaxies(input)
+	strArray := tools.ExtractStringsFromString(input)
 
 	for _, line := range strArray {
 		AddStringLineToGrid(line, &grid)
@@ -129,48 +114,106 @@ func AddStringLineToGrid(line string, grid *Grid) {
 	grid.tiles = append(grid.tiles, row)
 }
 
-func ModifyStringForGalaxies(input string) []string {
-	strArray := tools.ExtractStringsFromString(input)
-	for i := 0; i < len(strArray); i++ {
-		galaxyFound := false
-		for _, char := range strArray[i] {
-			if string(char) != "." {
-				galaxyFound = true
-				break
+func (g Grid) CountEmptyColumnsBetweenPoints(source, target Point) (result int) {
+	if source.x < target.x {
+		for x := source.x + 1; x <= target.x; x++ {
+			if slices.Contains(g.GetEmptyColumns(), x) {
+				result++
 			}
 		}
-		if !galaxyFound {
-			strArray = slices.Insert(strArray, i, strArray[i])
-			i++
+	} else {
+		for x := source.x - 1; x >= target.x; x-- {
+			if slices.Contains(g.GetEmptyColumns(), x) {
+				result++
+			}
 		}
 	}
 
-	for x := 0; x < len(strArray[0]); x++ {
-		galaxyFound := false
-		for y := 0; y < len(strArray); y++ {
-			if string(strArray[y][x]) != "." {
-				galaxyFound = true
-				break
-			}
-		}
-		if !galaxyFound {
-			for y := 0; y < len(strArray); y++ {
-				strArray[y] = strArray[y][:x] + "." + strArray[y][x:]
-			}
-			x++
-		}
-	}
-
-	return strArray
+	return result
 }
 
-func CleanupPairsOfPoints(pairs [][]Point) (output [][]Point) {
-	for i := 0; i < len(pairs); i++ {
-		for j := i + 1; j < len(pairs); j++ {
-			if pairs[i][0] == pairs[j][0] || pairs[i][0] == pairs[j][1] || pairs[i][1] == pairs[j][0] || pairs[i][1] == pairs[j][1] {
-				output = append(pairs[:j], pairs[j+1:]...)
+func (g Grid) CountEmptyRowsBetweenPoints(source, target Point) (result int) {
+	if source.y < target.y {
+		for y := source.y + 1; y <= target.y; y++ {
+			if slices.Contains(g.GetEmptyRows(), y) {
+				result++
+			}
+		}
+	} else {
+		for y := source.y - 1; y >= target.y; y-- {
+			if slices.Contains(g.GetEmptyRows(), y) {
+				result++
 			}
 		}
 	}
-	return output
+
+	return result
+
+}
+
+func (g *Grid) GetEmptyRows() []int {
+	if len(g.EmptyRows) > 0 {
+		return g.EmptyRows
+	}
+	for y, row := range g.tiles {
+		empty := true
+		for _, tile := range row {
+			if tile.IsGalaxy() {
+				empty = false
+				break
+			}
+		}
+		if empty {
+			g.EmptyRows = append(g.EmptyRows, y)
+		}
+	}
+	return g.EmptyRows
+}
+
+func (g *Grid) GetEmptyColumns() []int {
+	if len(g.EmptyColumns) > 0 {
+		return g.EmptyColumns
+	}
+	for x, _ := range g.tiles[0] {
+		empty := true
+		for y := 0; y < len(g.tiles); y++ {
+			if g.tiles[y][x].IsGalaxy() {
+				empty = false
+				break
+			}
+		}
+		if empty {
+			g.EmptyColumns = append(g.EmptyColumns, x)
+		}
+	}
+	return g.EmptyColumns
+}
+
+func Calculate(input string, multiplier int) (result int) {
+	grid := GridFromString(input)
+	galaxyCoordinates := []Point{}
+	for y, row := range grid.tiles {
+		for x, tile := range row {
+			if tile.IsGalaxy() {
+				galaxyCoordinates = append(galaxyCoordinates, Point{x, y})
+			}
+		}
+	}
+
+	pairs := [][]Point{}
+	for i := 0; i < len(galaxyCoordinates); i++ {
+		for j := i + 1; j < len(galaxyCoordinates); j++ {
+			pair := []Point{galaxyCoordinates[i], galaxyCoordinates[j]}
+			pairs = append(pairs, pair)
+		}
+	}
+
+	for _, pair := range pairs {
+		length := grid.ShortestPathBetweenGalaxies(pair[0], pair[1], multiplier)
+		if length > 0 {
+			result += length
+		}
+	}
+
+	return result
 }

@@ -18,13 +18,10 @@ func PartOne(input string) (result int) {
 			}
 		}
 	}
-	paths := [][]PipePoint{}
 	choices := start.WhereDoIStart(pipeMap)
-	for _, choice := range choices {
-		paths = append(paths, choice.GoToStart(start, pipeMap))
-	}
+	path := choices[0].GoToStart(start, pipeMap)
 
-	return len(paths[0])/2 + 1
+	return len(path)/2 + 1
 }
 
 func PartTwo(input string) (result int) {
@@ -109,7 +106,7 @@ func (p PipePoint) PossibleJumps(pipeMap [][]PipePoint) (result []PipePoint, err
 		pairs = append(pairs, []int{p.x + 1, p.y}, []int{p.x, p.y + 1})
 	}
 	for _, pair := range pairs {
-		if pair[0] >= 0 && pair[1] >= 0 && pair[0] < len(pipeMap) && pair[1] < len(pipeMap[0]) {
+		if pair[0] >= 0 && pair[1] >= 0 && pair[0] < len(pipeMap[0]) && pair[1] < len(pipeMap) {
 			result = append(result, pipeMap[pair[1]][pair[0]])
 		}
 	}
@@ -149,4 +146,8 @@ func (p PipePoint) GoToStart(start PipePoint, pipeMap [][]PipePoint) (path []Pip
 	}
 
 	return path
+}
+
+func (p PipePoint) String() string {
+	return p.id
 }

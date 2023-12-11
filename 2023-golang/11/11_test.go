@@ -1,6 +1,7 @@
 package main
 
 import (
+	"reflect"
 	"testing"
 
 	"github.com/lubieniebieski/advent-of-code/2023-golang/tools/toolstest"
@@ -62,3 +63,78 @@ func BenchmarkPartTwo(b *testing.B) {
 }
 
 // Main tests below
+
+func TestGridFromString(t *testing.T) {
+	t.Run("Works for example with galaxies", func(t *testing.T) {
+		input := `#..
+		.#.
+		..#`
+		want := Grid{
+			tiles: [][]Tile{
+				{
+					{value: "#"},
+					{value: "."},
+					{value: "."},
+				},
+				{
+					{value: "."},
+					{value: "#"},
+					{value: "."},
+				},
+				{
+					{value: "."},
+					{value: "."},
+					{value: "#"},
+				},
+			},
+		}
+		got := GridFromString(input)
+		if !reflect.DeepEqual(got, want) {
+			t.Errorf("That's not what I wanted! Got: %v, want: %v", got, want)
+
+		}
+	})
+
+	t.Run("Works for example without galaxies", func(t *testing.T) {
+		input := `.#.
+				  ...
+		          .#.`
+		want := Grid{
+			tiles: [][]Tile{
+				{
+					{value: "."},
+					{value: "."},
+					{value: "#"},
+					{value: "."},
+					{value: "."},
+				},
+				{
+					{value: "."},
+					{value: "."},
+					{value: "."},
+					{value: "."},
+					{value: "."},
+				},
+				{
+					{value: "."},
+					{value: "."},
+					{value: "."},
+					{value: "."},
+					{value: "."},
+				},
+				{
+					{value: "."},
+					{value: "."},
+					{value: "#"},
+					{value: "."},
+					{value: "."},
+				},
+			},
+		}
+		got := GridFromString(input)
+		if !reflect.DeepEqual(got, want) {
+			t.Errorf("That's not what I wanted! Got: %v, want: %v", got, want)
+
+		}
+	})
+}

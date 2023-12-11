@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math"
 	"os"
 	"slices"
 	"time"
@@ -10,12 +11,35 @@ import (
 )
 
 func PartOne(input string) (result int) {
+	grid := GridFromString(input)
+	galaxyCoordinates := []Point{}
+	for y, row := range grid.tiles {
+		for x, tile := range row {
+			if tile.IsGalaxy() {
+				galaxyCoordinates = append(galaxyCoordinates, Point{x, y})
+			}
+		}
+	}
+
+	pairs := [][]Point{}
+	for i := 0; i < len(galaxyCoordinates); i++ {
+		for j := i + 1; j < len(galaxyCoordinates); j++ {
+			pair := []Point{galaxyCoordinates[i], galaxyCoordinates[j]}
+			pairs = append(pairs, pair)
+		}
+	}
+
+	for _, pair := range pairs {
+		length := grid.ShortestPathBetweenGalaxies(pair[0], pair[1])
+		if length > 0 {
+			result += length
+		}
+	}
 
 	return result
 }
 
 func PartTwo(input string) (result int) {
-
 	return result
 }
 
@@ -44,6 +68,15 @@ type Tile struct {
 	value string
 }
 
+type Point struct {
+	x int
+	y int
+}
+
+func (p Point) String() string {
+	return fmt.Sprintf("(%d, %d)", p.x, p.y)
+}
+
 func (t Tile) IsEmpty() bool {
 	return t.value == "."
 }
@@ -69,6 +102,12 @@ func (g Grid) String() string {
 		result += "\n"
 	}
 	return result
+}
+
+func (g Grid) ShortestPathBetweenGalaxies(source, destination Point) (result int) {
+	x := destination.x - source.x
+	y := destination.y - source.y
+	return int(math.Abs(float64(x)) + math.Abs(float64(y)))
 }
 
 func GridFromString(input string) (grid Grid) {
@@ -123,4 +162,15 @@ func ModifyStringForGalaxies(input string) []string {
 	}
 
 	return strArray
+}
+
+func CleanupPairsOfPoints(pairs [][]Point) (output [][]Point) {
+	for i := 0; i < len(pairs); i++ {
+		for j := i + 1; j < len(pairs); j++ {
+			if pairs[i][0] == pairs[j][0] || pairs[i][0] == pairs[j][1] || pairs[i][1] == pairs[j][0] || pairs[i][1] == pairs[j][1] {
+				output = append(pairs[:j], pairs[j+1:]...)
+			}
+		}
+	}
+	return output
 }

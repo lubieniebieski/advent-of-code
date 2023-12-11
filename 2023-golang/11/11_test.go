@@ -32,7 +32,6 @@ var testCases = []struct {
 }
 
 func TestPartOne(t *testing.T) {
-	t.SkipNow()
 	t.Run("Works for provided example", func(t *testing.T) {
 		want := testCases[1].want
 		got := PartOne(testCases[1].input)
@@ -135,6 +134,74 @@ func TestGridFromString(t *testing.T) {
 		if !reflect.DeepEqual(got, want) {
 			t.Errorf("That's not what I wanted! Got: %v, want: %v", got, want)
 
+		}
+	})
+}
+
+func TestCleanupPairsOfPoints(t *testing.T) {
+	t.Run("Works for example", func(t *testing.T) {
+		input := [][]Point{
+			{
+				{1, 2},
+				{2, 3},
+			},
+			{
+				{2, 3},
+				{1, 2},
+			},
+			{
+				{5, 3},
+				{1, 2},
+			},
+		}
+		want := [][]Point{
+			{
+				{1, 2},
+				{2, 3},
+			},
+			{
+				{5, 3},
+				{1, 2},
+			},
+		}
+		got := CleanupPairsOfPoints(input)
+		if !reflect.DeepEqual(got, want) {
+			t.Errorf("That's not what I wanted! Got: %v, want: %v", got, want)
+
+		}
+	})
+}
+
+func TestGrid_ShortestPathBetweenGalaxies(t *testing.T) {
+	t.Run("Works for simple example", func(t *testing.T) {
+		input := `#..
+		.#.
+		..#`
+		grid := GridFromString(input)
+		want := 4
+		got := grid.ShortestPathBetweenGalaxies(Point{0, 0}, Point{2, 2})
+		if got != want {
+			t.Errorf("That's not what I wanted! Got: %v, want: %v", got, want)
+		}
+	})
+
+	t.Run("Works for example from readme", func(t *testing.T) {
+		grid := GridFromString(testCases[1].input)
+		tCases := []struct {
+			from Point
+			to   Point
+			want int
+		}{
+			{Point{11, 0}, Point{11, 5}, 5},
+			{Point{0, 4}, Point{10, 9}, 15},
+			{Point{2, 0}, Point{7, 12}, 17},
+			{Point{10, 9}, Point{11, 5}, 5},
+		}
+		for _, tCase := range tCases {
+			got := grid.ShortestPathBetweenGalaxies(tCase.from, tCase.to)
+			if got != tCase.want {
+				t.Errorf("That's not what I wanted! Got: %v, want: %v", got, tCase.want)
+			}
 		}
 	})
 }

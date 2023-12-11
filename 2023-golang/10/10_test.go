@@ -33,6 +33,18 @@ var testCases = []struct {
 		LJ...`,
 		8,
 	},
+	{
+		`...........
+		.S-------7.
+		.|F-----7|.
+		.||.....||.
+		.||.....||.
+		.|L-7.F-J|.
+		.|..|.|..|.
+		.L--J.L--J.
+		...........`,
+		4,
+	},
 }
 
 func TestPartOne(t *testing.T) {
@@ -50,7 +62,6 @@ func TestPartOne(t *testing.T) {
 }
 
 func TestPartTwo(t *testing.T) {
-	t.SkipNow()
 	t.Run("Works for provided example", func(t *testing.T) {
 		want := testCases[3].want
 		got := PartTwo(testCases[3].input)

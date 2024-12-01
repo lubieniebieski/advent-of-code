@@ -3,6 +3,7 @@ package utils
 import (
 	"fmt"
 	"os"
+	"time"
 )
 
 type Solution struct {
@@ -17,5 +18,15 @@ func Run(day int, solution Solution) {
 		os.Exit(1)
 	}
 
-	DisplayResults(day, solution.Part1(input), solution.Part2(input))
+	// Measure Part 1
+	start := time.Now()
+	part1Value := solution.Part1(input)
+	part1 := Result{Value: part1Value, Duration: time.Since(start)}
+
+	// Measure Part 2
+	start = time.Now()
+	part2Value := solution.Part2(input)
+	part2 := Result{Value: part2Value, Duration: time.Since(start)}
+
+	DisplayResults(day, part1, part2)
 }

@@ -6,17 +6,16 @@ import (
 
 func safeRow(row string) bool {
 	numbers, _ := utils.GetIntsFromString(row)
-	if numbers[0] < numbers[1] {
-		for i := 0; i < len(numbers)-1; i++ {
-			diff := numbers[i+1] - numbers[i]
+	isIncreasing := numbers[0] < numbers[len(numbers)-1]
+
+	for i := 1; i < len(numbers); i++ {
+		diff := numbers[i] - numbers[i-1]
+		if isIncreasing {
 			if diff <= 0 || diff > 3 {
 				return false
 			}
-		}
-	} else {
-		for i := 0; i < len(numbers)-1; i++ {
-			diff := numbers[i] - numbers[i+1]
-			if diff <= 0 || diff > 3 {
+		} else {
+			if diff >= 0 || diff < -3 {
 				return false
 			}
 		}

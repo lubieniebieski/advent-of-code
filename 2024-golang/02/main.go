@@ -24,6 +24,24 @@ func safeRow(row string) bool {
 	return true
 }
 
+func saferRow(row string) bool {
+	if safeRow(row) {
+		return true
+	}
+	numbers, _ := utils.GetIntsFromString(row)
+	for i := 0; i < len(numbers); i++ {
+		remaining := make([]int, 0, len(numbers)-1)
+		remaining = append(remaining, numbers[:i]...)
+		remaining = append(remaining, numbers[i+1:]...)
+
+		remainingStr := utils.IntsToString(remaining)
+		if safeRow(remainingStr) {
+			return true
+		}
+	}
+	return false
+}
+
 func solve1(input []string) int {
 	safeCount := 0
 	for _, line := range input {
@@ -36,8 +54,14 @@ func solve1(input []string) int {
 }
 
 func solve2(input []string) int {
-	// TODO: Implement solution for part 2
-	return 0
+	safeCount := 0
+	for _, line := range input {
+		if saferRow(line) {
+			safeCount++
+		}
+	}
+
+	return safeCount
 }
 
 func main() {

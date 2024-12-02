@@ -18,3 +18,14 @@ func GetIntsFromString(input string) ([]int, error) {
 	}
 	return numbers, nil
 }
+
+func IntsToString(numbers []int) string {
+	str := ""
+	for i, n := range numbers {
+		if i > 0 {
+			str += " "
+		}
+		str += fmt.Sprintf("%d", n)
+	}
+	return str
+}

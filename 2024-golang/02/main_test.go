@@ -20,9 +20,14 @@ func TestSolve1(t *testing.T) {
 
 func TestSolve2(t *testing.T) {
 	input := []string{
-		// Add your test input here
+		"7 6 4 2 1",
+		"1 2 7 8 9",
+		"9 7 6 2 1",
+		"1 3 2 4 5",
+		"8 6 4 4 1",
+		"1 3 6 7 9",
 	}
-	want := 0 // Expected result
+	want := 4
 	got := solve2(input)
 	if got != want {
 		t.Errorf("solve2() = %v, want %v", got, want)
@@ -86,6 +91,54 @@ func TestSafeRow(t *testing.T) {
 			got := safeRow(tt.row)
 			if got != tt.want {
 				t.Errorf("safeRow() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestSaferRow(t *testing.T) {
+
+	tests := []struct {
+		name string
+		row  string
+		want bool
+	}{
+		{
+			name: "safe row - decreasing",
+			row:  "7 6 4 2 1",
+			want: true,
+		},
+		{
+			name: "unsafe row - too big increase",
+			row:  "1 2 7 8 9",
+			want: false,
+		},
+		{
+			name: "unsafe row - too big decrease",
+			row:  "9 7 6 2 1",
+			want: false,
+		},
+		{
+			name: "safe row - remove middle peak",
+			row:  "1 3 2 4 5",
+			want: true,
+		},
+		{
+			name: "safe row - remove plateau",
+			row:  "8 6 4 4 1",
+			want: true,
+		},
+		{
+			name: "safe row - all increasing",
+			row:  "1 3 6 7 9",
+			want: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := saferRow(tt.row)
+			if got != tt.want {
+				t.Errorf("saferRow() = %v, want %v", got, tt.want)
 			}
 		})
 	}

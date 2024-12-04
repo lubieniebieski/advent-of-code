@@ -38,3 +38,12 @@ func IntsToString(numbers []int) string {
 	}
 	return str
 }
+
+// StringsTo2DArray converts a slice of strings into a 2D array of strings
+func StringsTo2DArray(input []string) [][]string {
+	result := make([][]string, len(input))
+	for i, line := range input {
+		result[i] = strings.Split(line, "")
+	}
+	return result
+}

@@ -1,5 +1,5 @@
 #!/bin/bash
-# Usage: ./setup-day.sh 01
+# Usage: ./setup-day.sh day01
 
 if [ -z "$1" ]; then
     echo "Please provide a day number (e.g., 01, 02, etc.)"

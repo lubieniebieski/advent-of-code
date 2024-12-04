@@ -19,8 +19,15 @@ func init() {
 }
 
 func main() {
-	port := flag.Int("port", 8080, "Port to run the server on")
+	web := flag.Bool("web", false, "Run in web server mode")
 	flag.Parse()
 
-	utils.StartServer(*port)
+	if *web {
+		utils.StartServer(8080)
+	} else {
+		results := utils.RunAllSolutions()
+		for _, result := range results {
+			utils.DisplayResults(result.Day, result.Part1, result.Part2)
+		}
+	}
 }

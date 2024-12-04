@@ -1,4 +1,4 @@
-package main
+package day03
 
 import (
 	"regexp"
@@ -59,16 +59,12 @@ func parseEnabledMuls(input string) Muls {
 	return muls
 }
 
-func solve1(input []string) int {
+func Solve1(input []string) int {
 	joinedInput := strings.Join(input, "")
 	return parseMuls(joinedInput).sum()
 }
 
-func solve2(input []string) int {
+func Solve2(input []string) int {
 	joinedInput := strings.Join(input, "")
 	return parseEnabledMuls(joinedInput).sum()
-}
-
-func main() {
-	utils.Run(3, utils.Solution{Part1: solve1, Part2: solve2})
 }

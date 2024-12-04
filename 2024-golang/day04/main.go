@@ -1,4 +1,4 @@
-package main
+package day04
 
 import (
 	"github.com/lubieniebieski/advent-of-code/2024-golang/utils"
@@ -93,7 +93,7 @@ func isIsOkSam(grid [][]string, i, j int) bool {
 
 }
 
-func solve1(input []string) int {
+func Solve1(input []string) int {
 	sum := 0
 
 	grid := utils.StringsTo2DArray(input)
@@ -115,7 +115,7 @@ func solve1(input []string) int {
 	return sum
 }
 
-func solve2(input []string) int {
+func Solve2(input []string) int {
 	sum := 0
 
 	grid := utils.StringsTo2DArray(input)
@@ -132,8 +132,4 @@ func solve2(input []string) int {
 		}
 	}
 	return sum
-}
-
-func main() {
-	utils.Run(4, utils.Solution{Part1: solve1, Part2: solve2}) // Just update the day number
 }

@@ -1,4 +1,4 @@
-package main
+package day02
 
 import (
 	"github.com/lubieniebieski/advent-of-code/2024-golang/utils"
@@ -42,7 +42,7 @@ func saferRow(row string) bool {
 	return false
 }
 
-func solve1(input []string) int {
+func Solve1(input []string) int {
 	safeCount := 0
 	for _, line := range input {
 		if safeRow(line) {
@@ -53,7 +53,7 @@ func solve1(input []string) int {
 	return safeCount
 }
 
-func solve2(input []string) int {
+func Solve2(input []string) int {
 	safeCount := 0
 	for _, line := range input {
 		if saferRow(line) {
@@ -62,8 +62,4 @@ func solve2(input []string) int {
 	}
 
 	return safeCount
-}
-
-func main() {
-	utils.Run(2, utils.Solution{Part1: solve1, Part2: solve2})
 }

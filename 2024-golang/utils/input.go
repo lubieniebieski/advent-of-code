@@ -38,7 +38,7 @@ func ReadInputFile(day int) ([]string, error) {
 	}
 
 	// If not found and we're in the root directory, try the day directory
-	dayDir := fmt.Sprintf("%02d", day)
+	dayDir := fmt.Sprintf("day%02d", day)
 	inputPath = filepath.Join(currentDir, dayDir, "input.txt")
 
 	return ReadInput(inputPath)

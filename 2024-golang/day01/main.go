@@ -1,15 +1,13 @@
-package main
+package day01
 
 import (
 	"math"
 	"sort"
 	"strconv"
 	"strings"
-
-	"github.com/lubieniebieski/advent-of-code/2024-golang/utils"
 )
 
-func solve1(input []string) int {
+func Solve1(input []string) int {
 
 	left, right := createLists(input)
 
@@ -38,7 +36,7 @@ func createLists(input []string) ([]int, []int) {
 	return left, right
 }
 
-func solve2(input []string) int {
+func Solve2(input []string) int {
 	left, right := createLists(input)
 
 	totalSimilarityScore := 0
@@ -60,8 +58,4 @@ func countSortedInstances(sorted []int, target int) int {
 	// Find the position of the first larger number
 	last := sort.SearchInts(sorted, target+1)
 	return last - first
-}
-
-func main() {
-	utils.Run(1, utils.Solution{Part1: solve1, Part2: solve2}) // Just update the day number
 }

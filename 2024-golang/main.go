@@ -8,6 +8,7 @@ import (
 	"github.com/lubieniebieski/advent-of-code/2024-golang/day03"
 	"github.com/lubieniebieski/advent-of-code/2024-golang/day04"
 	"github.com/lubieniebieski/advent-of-code/2024-golang/day05"
+	"github.com/lubieniebieski/advent-of-code/2024-golang/day06"
 
 	"github.com/lubieniebieski/advent-of-code/2024-golang/utils"
 )
@@ -18,6 +19,7 @@ func init() {
 	utils.RegisterSolution(3, utils.Solution{Part1: day03.Solve1, Part2: day03.Solve2})
 	utils.RegisterSolution(4, utils.Solution{Part1: day04.Solve1, Part2: day04.Solve2})
 	utils.RegisterSolution(5, utils.Solution{Part1: day05.Solve1, Part2: day05.Solve2})
+	utils.RegisterSolution(6, utils.Solution{Part1: day06.Solve1, Part2: day06.Solve2})
 
 }
 

@@ -57,19 +57,30 @@ func RunAllSolutions() []DayResults {
 	results = []DayResults{}
 	// Find and run all solutions
 	for day := 1; day <= 25; day++ {
-		if solution, ok := GetSolution(day); ok {
-			input, err := ReadInputFile(day)
-			if err != nil {
-				fmt.Printf("failed to read input for day %d: %v\n", day, err)
-				continue
-			}
-			results = append(results, RunAndStore(day, solution, input))
+		dayResults, err := RunDay(day)
+		if err == nil {
+			results = append(results, dayResults)
 		}
+
 	}
 	sort.Slice(results, func(i, j int) bool {
 		return results[i].Day < results[j].Day
 	})
 	return results
+}
+
+func RunDay(day int) (DayResults, error) {
+	solution, ok := GetSolution(day)
+	if !ok {
+		return DayResults{}, fmt.Errorf("no solution found for day %d", day)
+	}
+
+	input, err := ReadInputFile(day)
+	if err != nil {
+		return DayResults{}, fmt.Errorf("failed to read input for day %d: %v", day, err)
+	}
+
+	return RunAndStore(day, solution, input), nil
 }
 
 func StartServer(port int) {

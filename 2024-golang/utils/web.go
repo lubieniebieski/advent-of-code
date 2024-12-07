@@ -26,6 +26,8 @@ const htmlTemplate = `
         table { border-collapse: collapse; width: 100%; }
         th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
         th { background-color: #f2f2f2; }
+        .fast { background-color: #90EE90; }
+        .slow { background-color: #FFB6C1; }
     </style>
 </head>
 <body>
@@ -43,9 +45,9 @@ const htmlTemplate = `
         <tr>
             <td>{{.Day}}</td>
             <td>{{.Part1.Value}}</td>
-            <td>{{.Part1.Duration}}</td>
+            <td class="{{if gt .Part1.Duration.Milliseconds 10}}slow{{else}}fast{{end}}">{{.Part1.Duration}}</td>
             <td>{{.Part2.Value}}</td>
-            <td>{{.Part2.Duration}}</td>
+            <td class="{{if gt .Part2.Duration.Milliseconds 10}}slow{{else}}fast{{end}}">{{.Part2.Duration}}</td>
             <td>{{.TotalTime}}</td>
         </tr>
         {{end}}

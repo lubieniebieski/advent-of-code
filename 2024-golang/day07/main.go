@@ -1,6 +1,7 @@
 package day07 // Change this for each new day
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/lubieniebieski/advent-of-code/2024-golang/utils"
@@ -11,6 +12,21 @@ type Number struct {
 	Ingridients []int
 }
 
+type Version1 struct{}
+type Version2 struct{}
+
+type Version interface {
+	V2() bool
+}
+
+func (Version1) V2() bool {
+	return false
+}
+
+func (Version2) V2() bool {
+	return true
+}
+
 func NewNumber(input string) Number {
 	split := strings.Split(input, ": ")
 	value, _ := utils.GetIntFromString(split[0])
@@ -18,42 +34,48 @@ func NewNumber(input string) Number {
 	return Number{Value: value, Ingridients: numbers}
 }
 
-func (n Number) IsTrue() bool {
-	results := allPossibleResults(n.Ingridients, n.Value)
-	for _, result := range results {
-		if result == n.Value {
-			return true
-		}
+func (n Number) IsTrue(version Version) bool {
+	return canReachTarget(version, n.Ingridients, n.Value)
+
+}
+
+func isSuccessfulOperation(version Version, a, b, target int) bool {
+	add := a + b
+	mul := a * b
+	if add == target || mul == target {
+		return true
+	} else if version.V2() {
+		concat := fmt.Sprintf("%d%d", a, b)
+		concatInt, _ := utils.GetIntFromString(concat)
+		return concatInt == target
 	}
+
 	return false
 }
 
-func allPossibleResults(numbers []int, max int) (results []int) {
-
+func canReachTarget(version Version, numbers []int, target int) bool {
 	if len(numbers) == 1 {
-		results = numbers
-	} else if len(numbers) == 2 {
-		add := numbers[0] + numbers[1]
-		mul := numbers[0] * numbers[1]
-		if add <= max {
-			results = append(results, add)
-		}
-		if mul <= max {
-			results = append(results, mul)
-		}
-
-	} else {
-
-		withSum := make([]int, 0)
-		withSum = append(withSum, numbers[0]+numbers[1])
-		withSum = append(withSum, numbers[2:]...)
-		results = append(results, allPossibleResults(withSum, max)...)
-		withMul := make([]int, 0)
-		withMul = append(withMul, numbers[0]*numbers[1])
-		withMul = append(withMul, numbers[2:]...)
-		results = append(results, allPossibleResults(withMul, max)...)
+		return numbers[0] == target
 	}
-	return results
+
+	if len(numbers) == 2 {
+		return isSuccessfulOperation(version, numbers[0], numbers[1], target)
+	}
+
+	// Try combining first two numbers with each operation
+	add := numbers[0] + numbers[1]
+	mul := numbers[0] * numbers[1]
+
+	if canReachTarget(version, append([]int{add}, numbers[2:]...), target) ||
+		canReachTarget(version, append([]int{mul}, numbers[2:]...), target) {
+		return true
+	} else if version.V2() {
+		concat := fmt.Sprintf("%d%d", numbers[0], numbers[1])
+		concatInt, _ := utils.GetIntFromString(concat)
+		return canReachTarget(version, append([]int{concatInt}, numbers[2:]...), target)
+	}
+	return false
+
 }
 
 func Solve1(input []string) int {
@@ -64,7 +86,7 @@ func Solve1(input []string) int {
 
 	sum := 0
 	for _, number := range numbers {
-		if number.IsTrue() {
+		if number.IsTrue(Version1{}) {
 			sum += number.Value
 		}
 	}
@@ -79,7 +101,7 @@ func Solve2(input []string) int {
 
 	sum := 0
 	for _, number := range numbers {
-		if number.IsTrue() {
+		if number.IsTrue(Version2{}) {
 			sum += number.Value
 		}
 	}

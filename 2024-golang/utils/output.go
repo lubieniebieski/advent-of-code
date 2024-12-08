@@ -20,3 +20,9 @@ func DisplayResults(day int, part1, part2 Result) {
 	fmt.Printf("Total time: %v\n", totalTime)
 	fmt.Println("============")
 }
+
+func PrintGrid(grid [][]string) {
+	for _, row := range grid {
+		fmt.Println(row)
+	}
+}

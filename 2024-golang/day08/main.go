@@ -48,39 +48,33 @@ func antinodesForPairV2(pair []Point, grid [][]string) []Point {
 	antinodes := []Point{}
 	rows, cols := len(grid), len(grid[0])
 
-	// Calculate step size
 	di := pair[1].i - pair[0].i
 	dj := pair[1].j - pair[0].j
 
-	// Check each integer multiple of the step
 	multiplier := 1
 	for {
-		// Try next point after the pair
+		// Calculate points in both directions simultaneously
 		nextI := pair[1].i + (di * multiplier)
 		nextJ := pair[1].j + (dj * multiplier)
-
-		// Break if out of bounds
-		if nextI < 0 || nextI >= rows || nextJ < 0 || nextJ >= cols {
-			break
-		}
-
-		antinodes = append(antinodes, Point{nextI, nextJ})
-		multiplier++
-	}
-
-	// Check each integer multiple in the opposite direction
-	multiplier = 1
-	for {
-		// Try previous point before the pair
 		prevI := pair[0].i - (di * multiplier)
 		prevJ := pair[0].j - (dj * multiplier)
 
-		// Break if out of bounds
-		if prevI < 0 || prevI >= rows || prevJ < 0 || prevJ >= cols {
+		// Track if either direction is still valid
+		validNext := nextI >= 0 && nextI < rows && nextJ >= 0 && nextJ < cols
+		validPrev := prevI >= 0 && prevI < rows && prevJ >= 0 && prevJ < cols
+
+		// Break if both directions are out of bounds
+		if !validNext && !validPrev {
 			break
 		}
 
-		antinodes = append(antinodes, Point{prevI, prevJ})
+		if validNext {
+			antinodes = append(antinodes, Point{nextI, nextJ})
+		}
+		if validPrev {
+			antinodes = append(antinodes, Point{prevI, prevJ})
+		}
+
 		multiplier++
 	}
 

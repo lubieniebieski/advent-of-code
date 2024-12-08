@@ -44,6 +44,49 @@ func antinodesForPair(pair []Point, grid [][]string) []Point {
 	return antinodes
 }
 
+func antinodesForPairV2(pair []Point, grid [][]string) []Point {
+	antinodes := []Point{}
+	rows, cols := len(grid), len(grid[0])
+
+	// Calculate step size
+	di := pair[1].i - pair[0].i
+	dj := pair[1].j - pair[0].j
+
+	// Check each integer multiple of the step
+	multiplier := 1
+	for {
+		// Try next point after the pair
+		nextI := pair[1].i + (di * multiplier)
+		nextJ := pair[1].j + (dj * multiplier)
+
+		// Break if out of bounds
+		if nextI < 0 || nextI >= rows || nextJ < 0 || nextJ >= cols {
+			break
+		}
+
+		antinodes = append(antinodes, Point{nextI, nextJ})
+		multiplier++
+	}
+
+	// Check each integer multiple in the opposite direction
+	multiplier = 1
+	for {
+		// Try previous point before the pair
+		prevI := pair[0].i - (di * multiplier)
+		prevJ := pair[0].j - (dj * multiplier)
+
+		// Break if out of bounds
+		if prevI < 0 || prevI >= rows || prevJ < 0 || prevJ >= cols {
+			break
+		}
+
+		antinodes = append(antinodes, Point{prevI, prevJ})
+		multiplier++
+	}
+
+	return antinodes
+}
+
 func createPairs(char string, grid [][]string) [][]Point {
 	points := findPoints(char, grid)
 	pairs := [][]Point{}
@@ -81,6 +124,29 @@ func Solve1(input []string) int {
 }
 
 func Solve2(input []string) int {
-	// TODO: Implement solution for part 2
-	return 0
+	grid := utils.StringsTo2DArray(input)
+
+	antinodes := make(map[Point]bool)
+	uniqueChars := make(map[string]bool)
+	for i, row := range grid {
+		for j, char := range row {
+			if char != "." {
+				uniqueChars[char] = true
+				antinodes[Point{i, j}] = true
+			}
+		}
+	}
+	for key := range uniqueChars {
+		pairs := createPairs(key, grid)
+		for _, pair := range pairs {
+			for _, antinode := range antinodesForPairV2(pair, grid) {
+				antinodes[antinode] = true
+			}
+		}
+	}
+	for antinode := range antinodes {
+		grid[antinode.i][antinode.j] = "#"
+	}
+
+	return len(antinodes)
 }

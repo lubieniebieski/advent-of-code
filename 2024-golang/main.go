@@ -12,7 +12,7 @@ import (
 	"github.com/lubieniebieski/advent-of-code/2024-golang/day06"
 	"github.com/lubieniebieski/advent-of-code/2024-golang/day07"
 	"github.com/lubieniebieski/advent-of-code/2024-golang/day08"
-	day09 "github.com/lubieniebieski/advent-of-code/2024-golang/template"
+	"github.com/lubieniebieski/advent-of-code/2024-golang/day09"
 
 	"github.com/lubieniebieski/advent-of-code/2024-golang/utils"
 )

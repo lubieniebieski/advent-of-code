@@ -34,18 +34,22 @@ func ConvertLayoutToBlocks(input string) []Block {
 }
 
 func SortBlocks(blocks []Block) []Block {
+	// iterating over ids
 	for i := len(blocks) - 1; i >= 0; i-- {
-		for j := 0; j < i; j++ {
-			if blocks[j].freeSpace >= blocks[i].size {
-				// Update free spaces
-				blocks[i-1].freeSpace += blocks[i].size + blocks[i].freeSpace
-				blocks[i].freeSpace = blocks[j].freeSpace - blocks[i].size
+		blockToMoveIdx := slices.IndexFunc(blocks, func(b Block) bool {
+			return b.id == i
+		})
+		for j := 0; j < blockToMoveIdx; j++ {
+			// find block of ID=i
+
+			blockToMove := blocks[blockToMoveIdx]
+			if blocks[j].freeSpace >= blockToMove.size {
+				blocks[blockToMoveIdx-1].freeSpace += blockToMove.size + blockToMove.freeSpace
+				blockToMove.freeSpace = blocks[j].freeSpace - blockToMove.size
 				blocks[j].freeSpace = 0
 
-				// Move block to new position by shifting elements
-				blockToMove := blocks[i]
-				copy(blocks[j+2:i+1], blocks[j+1:i])
-				blocks[j+1] = blockToMove
+				blocks = slices.Delete(blocks, blockToMoveIdx, blockToMoveIdx+1)
+				blocks = slices.Insert(blocks, j+1, blockToMove)
 				break
 			}
 		}

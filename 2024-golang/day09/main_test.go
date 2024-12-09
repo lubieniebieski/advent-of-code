@@ -20,7 +20,8 @@ func TestConvertLayoutToBlocks(t *testing.T) {
 	}
 
 	for _, c := range cases {
-		got := ConvertLayoutToBlocks(c.in)
+
+		got := BlocksToString(ConvertLayoutToBlocks(c.in))
 		if strings.Join(got, "") != strings.Join(c.want, "") {
 			t.Errorf("ConvertLayoutToBlocks(%q) == %q, want %q", c.in, strings.Join(got, ""), strings.Join(c.want, ""))
 		}
@@ -50,6 +51,7 @@ func TestCalculateChecksum(t *testing.T) {
 		want int
 	}{
 		{"0099811188827773336446555566..............", 1928},
+		{"00992111777.44.333....5555.6666.....8888..", 2858},
 	}
 
 	for _, c := range cases {

@@ -94,7 +94,7 @@ func Solve1(input []string) int {
 
 func Solve2(input []string) int {
 	grid := utils.StringsTo2DArray(input)
-	startPos := findStart(grid) // renamed to avoid shadowing
+	startPos := findStart(grid)
 
 	// Get original path without blocks
 	_, origPath := followPath(grid, startPos, Position{-1, -1})
@@ -111,30 +111,25 @@ func Solve2(input []string) int {
 	results := make(chan bool, len(positions))
 	var wg sync.WaitGroup
 
+	// Calculate number of workers
 	workers := runtime.NumCPU()
 	if workers > len(positions) {
 		workers = len(positions)
 	}
 
-	chunkSize := (len(positions) + workers - 1) / workers
+	// Distribute work more evenly
 	for i := 0; i < workers; i++ {
-		startIdx := i * chunkSize
-		endIdx := startIdx + chunkSize
-		if endIdx > len(positions) {
-			endIdx = len(positions)
-		}
-
 		wg.Add(1)
-		go func(posSlice []Position) {
+		go func(workerID int) {
 			defer wg.Done()
-			for _, pos := range posSlice {
-				isLoop, _ := followPath(grid, startPos, pos) // use startPos instead of shadowed start
+			// Each worker processes positions at index workerID, workerID+workers, workerID+2*workers, etc.
+			for j := workerID; j < len(positions); j += workers {
+				isLoop, _ := followPath(grid, startPos, positions[j])
 				results <- isLoop
 			}
-		}(positions[startIdx:endIdx])
+		}(i)
 	}
 
-	// Use a done channel to ensure all results are collected
 	done := make(chan struct{})
 	go func() {
 		wg.Wait()
@@ -142,7 +137,6 @@ func Solve2(input []string) int {
 		close(done)
 	}()
 
-	// Collect results with timeout
 	loops := 0
 	select {
 	case <-done:
@@ -151,7 +145,7 @@ func Solve2(input []string) int {
 				loops++
 			}
 		}
-	case <-time.After(5 * time.Second): // timeout if something goes wrong
+	case <-time.After(5 * time.Second):
 		return 0
 	}
 
